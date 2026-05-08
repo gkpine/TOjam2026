@@ -1,9 +1,7 @@
-extends CharacterBody2D
+extends Character
 class_name Player
 
 const FRAME_SIZE := 192
-
-@export var move_speed: float = 200.0
 
 var sprite: AnimatedSprite2D
 var player_index: int = 0
@@ -20,7 +18,7 @@ func setup(index: int, color: Color) -> void:
 
 func _physics_process(_delta: float) -> void:
 	var direction := InputManager.get_movement_vector(player_index)
-	velocity = direction * move_speed
+	velocity = direction * movement_speed
 	move_and_slide()
 	GameState.update_player_position(player_index, global_position)
 

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemy/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "thief"
+frame_size = 192
+idle_frames = 6
+attack_frames = 6
+run_frames = 6
+health = 18.0
+base_damage = 6.0
+strength = 0.0
+auto_attack_per_second = 1.5
+movement_speed = 180.0
+target_range_px = 250.0
+auto_attack_range_px = 70.0
