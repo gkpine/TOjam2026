@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemy/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "minotaur"
+frame_size = 320
+idle_frames = 16
+attack_frames = 12
+run_frames = 8
+health = 100.0
+base_damage = 15.0
+strength = 0.0
+auto_attack_per_second = 0.4
+movement_speed = 80.0
+target_range_px = 250.0
+auto_attack_range_px = 100.0

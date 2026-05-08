@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemy/enemy_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+enemy_name = "panda"
+frame_size = 256
+idle_frames = 10
+attack_frames = 13
+run_frames = 6
+health = 55.0
+base_damage = 9.0
+strength = 0.0
+auto_attack_per_second = 0.6
+movement_speed = 95.0
+target_range_px = 250.0
+auto_attack_range_px = 90.0

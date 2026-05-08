@@ -2,6 +2,20 @@
 
 [ext_resource type="Script" uid="uid://bpspx764as28n" path="res://scenes/world/world.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://dyoc5aut25ddh" path="res://Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color1.png" id="2_sl2e5"]
+[ext_resource type="PackedScene" path="res://scenes/spawner/spawner.tscn" id="3_spawner"]
+[ext_resource type="PackedScene" path="res://scenes/enemy/enemy.tscn" id="4_enemy"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/skull.tres" id="5_skull"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/gnome.tres" id="6_gnome"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/thief.tres" id="7_thief"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/lizard.tres" id="8_lizard"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/spider.tres" id="9_spider"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/snake.tres" id="10_snake"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/gnoll.tres" id="11_gnoll"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/bear.tres" id="12_bear"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/panda.tres" id="13_panda"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/turtle.tres" id="14_turtle"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/minotaur.tres" id="15_minotaur"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/troll.tres" id="16_troll"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1fp7r"]
 texture = ExtResource("2_sl2e5")
@@ -58,6 +72,13 @@ sources/1 = SubResource("TileSetAtlasSource_1fp7r")
 script = ExtResource("1_script")
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=75646214]
+
+[node name="Spawner" parent="." instance=ExtResource("3_spawner")]
+position = Vector2(400, 0)
+enemy_scene = ExtResource("4_enemy")
+enemy_types = Array[Resource]([ExtResource("5_skull"), ExtResource("6_gnome"), ExtResource("7_thief"), ExtResource("8_lizard"), ExtResource("9_spider"), ExtResource("10_snake"), ExtResource("11_gnoll"), ExtResource("12_bear"), ExtResource("13_panda"), ExtResource("14_turtle"), ExtResource("15_minotaur"), ExtResource("16_troll")])
+spawn_radius = 300.0
+respawn_time = 15.0
 
 [node name="Map" type="Node2D" parent="." unique_id=1803197977]
 
