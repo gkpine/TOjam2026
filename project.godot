@@ -11,8 +11,20 @@ config_version=5
 [application]
 
 config/name="TOjam2026"
+run/main_scene="res://scenes/menu/main_menu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameState="*res://scripts/autoload/game_state.gd"
+InputManager="*res://scripts/autoload/input_manager.gd"
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
 
 [physics]
 
