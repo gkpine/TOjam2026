@@ -3,6 +3,7 @@ extends Resource
 
 @export var enemy_name: String
 @export var frame_size: int = 192
+@export var visible_sprite_height: int = 173
 @export var idle_frames: int = 8
 @export var attack_frames: int = 7
 @export var run_frames: int = 6
@@ -17,3 +18,7 @@ extends Resource
 @export var target_range_px: float = 250.0
 @export var auto_attack_range_px: float = 80.0
 @export var collision_radius: float = 16.0
+@export var exp_reward: float = 10.0
+@export var base_health_regen_per_second: float = 0.0
+@export var in_combat_health_regen_multiplier: float = 0.0
+@export var moving_hp_regen_multiplier: float = 0.25

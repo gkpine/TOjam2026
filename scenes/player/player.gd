@@ -4,10 +4,13 @@ class_name Player
 const FRAME_SIZE := 192
 const DEFAULT_DATA: PlayerData = preload("res://scenes/player/default_player.tres")
 const DEFAULT_WHIRLWIND: AbilityData = preload("res://scenes/ability/types/whirlwind.tres")
+const LEVEL_DATA: LevelData = preload("res://scenes/player/level_data.tres")
 const MAX_ABILITY_SLOTS := 4
 
 signal ability_used(slot_index: int)
 signal ability_cooldown_changed(slot_index: int, remaining: float, total: float)
+signal experience_changed(current_xp: float, xp_required: float)
+signal leveled_up(new_level: int)
 
 var sprite: AnimatedSprite2D
 var player_index: int = 0
@@ -16,6 +19,8 @@ var potential_targets: Array[Character] = []
 var _prev_target_list_empty: bool = true
 var abilities: Array[AbilityData] = []
 var ability_cooldowns: Array[float] = []
+var experience: float = 0.0
+var level: int = 1
 
 
 func setup(index: int, color: Color) -> void:
@@ -144,6 +149,11 @@ func _apply_stats(data: PlayerData) -> void:
 	movement_speed = data.movement_speed
 	target_range_px = data.target_range_px
 	auto_attack_range_px = data.auto_attack_range_px
+	base_health_regen_per_second = data.base_health_regen_per_second
+	in_combat_health_regen_multiplier = data.in_combat_health_regen_multiplier
+	moving_hp_regen_multiplier = data.moving_hp_regen_multiplier
+	experience = data.experience
+	level = data.level
 
 
 func equip_ability(ability: AbilityData, slot: int) -> void:
@@ -171,6 +181,21 @@ func _tick_ability_cooldowns(delta: float) -> void:
 		if ability_cooldowns[i] > 0.0:
 			ability_cooldowns[i] = maxf(ability_cooldowns[i] - delta, 0.0)
 			ability_cooldown_changed.emit(i, ability_cooldowns[i], abilities[i].cooldown)
+
+
+func gain_experience(amount: float) -> void:
+	if level >= LEVEL_DATA.max_level:
+		return
+	experience += amount
+	while level < LEVEL_DATA.max_level and experience >= LEVEL_DATA.get_xp_required(level):
+		experience -= LEVEL_DATA.get_xp_required(level)
+		level += 1
+		leveled_up.emit(level)
+	var xp_req := LEVEL_DATA.get_xp_required(level)
+	if xp_req > 0.0:
+		experience_changed.emit(experience, xp_req)
+	else:
+		experience_changed.emit(0.0, 1.0)
 
 
 func die() -> void:

@@ -1,8 +1,10 @@
 extends RichTextLabel
 
-var damage_amount: int = 0
+var amount: int = 0
 var damage_type: String = "auto_attack"
 var is_player_damage: bool = false
+var is_heal: bool = false
+var anim_config: Dictionary = {}
 
 
 func _ready() -> void:
@@ -18,13 +20,18 @@ func _ready() -> void:
 
 	var color_tag := ""
 	var color_end := ""
-	if is_player_damage:
+	var prefix := ""
+	if is_heal:
+		color_tag = "[color=green]"
+		color_end = "[/color]"
+		prefix = "+"
+	elif is_player_damage:
 		color_tag = "[color=red]"
 		color_end = "[/color]"
 	elif damage_type == "ability":
 		color_tag = "[color=yellow]"
 		color_end = "[/color]"
-	text = "[center]" + color_tag + str(damage_amount) + color_end + "[/center]"
+	text = "[center]" + color_tag + prefix + str(amount) + color_end + "[/center]"
 
 	await get_tree().process_frame
 	_start_animation()
@@ -35,34 +42,33 @@ func _start_animation() -> void:
 	pivot_offset = size / 2.0
 	modulate.a = 1.0
 
-	var p := get_parent()
-	var dur: float = p.animation_duration_seconds
+	var dur: float = anim_config.get("duration", 1.0)
 
-	var bounce_start: float = p.bounce_start_time_relative * dur
-	var bounce_end: float = p.bounce_end_time_relative * dur
+	var bounce_start: float = anim_config.get("bounce_start", 0.0) * dur
+	var bounce_end: float = anim_config.get("bounce_end", 0.3) * dur
 	var bounce_dur: float = bounce_end - bounce_start
 	if bounce_dur > 0.0:
 		var half: float = bounce_dur / 2.0
 		var tween_bounce := create_tween()
 		if bounce_start > 0.0:
 			tween_bounce.tween_interval(bounce_start)
-		tween_bounce.tween_property(self, "scale", Vector2.ONE * float(p.bounce_scale), half) \
+		tween_bounce.tween_property(self, "scale", Vector2.ONE * float(anim_config.get("bounce_scale", 1.3)), half) \
 			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 		tween_bounce.tween_property(self, "scale", Vector2.ONE, half) \
 			.set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 
-	var float_start: float = p.float_start_time_relative * dur
-	var float_end: float = p.float_end_time_relative * dur
+	var float_start: float = anim_config.get("float_start", 0.1) * dur
+	var float_end: float = anim_config.get("float_end", 1.0) * dur
 	var float_dur: float = float_end - float_start
 	if float_dur > 0.0:
 		var tween_float := create_tween()
 		if float_start > 0.0:
 			tween_float.tween_interval(float_start)
-		tween_float.tween_property(self, "position:y", position.y - float(p.float_distance_px), float_dur) \
+		tween_float.tween_property(self, "position:y", position.y - float(anim_config.get("float_distance", 40.0)), float_dur) \
 			.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 
-	var fade_start: float = p.fade_start_time_relative * dur
-	var fade_end: float = p.fade_end_time_relative * dur
+	var fade_start: float = anim_config.get("fade_start", 0.5) * dur
+	var fade_end: float = anim_config.get("fade_end", 1.0) * dur
 	var fade_dur: float = fade_end - fade_start
 	if fade_dur > 0.0:
 		var tween_fade := create_tween()

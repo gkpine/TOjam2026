@@ -1,16 +1,16 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://dtbkhjb2ulwou"]
 
-[ext_resource type="Script" path="res://scenes/enemy/enemy.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://ddhdag5qh4bl4" path="res://scenes/enemy/enemy.gd" id="1_script"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
 radius = 16.0
 
-[node name="Enemy" type="CharacterBody2D"]
+[node name="Enemy" type="CharacterBody2D" unique_id=49804944]
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_script")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=806164557]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1708589730]
 shape = SubResource("CircleShape2D_1")

@@ -5,6 +5,9 @@ class_name Enemy
 
 var sprite: AnimatedSprite2D
 var stop_distance: float = 60.0
+var _health_bar: StatusBar
+var _hit_scale_tween: Tween
+var _hit_flash_tween: Tween
 
 
 func setup(data: EnemyData) -> void:
@@ -15,9 +18,22 @@ func setup(data: EnemyData) -> void:
 	sprite.play("idle")
 	$CollisionShape2D.shape = CircleShape2D.new()
 	$CollisionShape2D.shape.radius = enemy_data.collision_radius
-	sprite.offset.y = enemy_data.collision_radius - (enemy_data.frame_size / 6.0);
+	sprite.offset.y = enemy_data.collision_radius - (enemy_data.visible_sprite_height / 6.0);
 	var reticle := preload("res://scenes/combat/targeting_reticle.tscn").instantiate()
 	add_child(reticle)
+	reticle.setup(enemy_data.collision_radius)
+
+	_health_bar = StatusBar.new()
+	add_child(_health_bar)
+	_health_bar.setup(
+		preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png"),
+		preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png"),
+		1
+	)
+	_health_bar.set_fill_color(Color(1.0, 0.2, 0.2))
+	_health_bar.position.x = -_health_bar.get_bar_width() / 2.0
+	_health_bar.position.y = sprite.offset.y - (enemy_data.visible_sprite_height / 2)
+	health_changed.connect(_on_health_changed)
 
 
 func _process(delta: float) -> void:
@@ -72,6 +88,9 @@ func _apply_stats() -> void:
 	movement_speed = enemy_data.movement_speed
 	target_range_px = enemy_data.target_range_px
 	auto_attack_range_px = enemy_data.auto_attack_range_px
+	base_health_regen_per_second = enemy_data.base_health_regen_per_second
+	in_combat_health_regen_multiplier = enemy_data.in_combat_health_regen_multiplier
+	moving_hp_regen_multiplier = enemy_data.moving_hp_regen_multiplier
 
 
 func _build_sprite_frames() -> SpriteFrames:
@@ -91,6 +110,41 @@ func play_attack_animation(anim_name: StringName = &"attack") -> void:
 	sprite.play(anim_name)
 	await sprite.animation_finished
 	is_attacking = false
+
+
+func take_damage(amount: float, damage_type: String = "auto_attack") -> void:
+	super.take_damage(amount, damage_type)
+	_play_hit_reaction()
+
+
+func _play_hit_reaction() -> void:
+	if not is_instance_valid(sprite):
+		return
+
+	if _hit_scale_tween and _hit_scale_tween.is_valid():
+		_hit_scale_tween.kill()
+	if _hit_flash_tween and _hit_flash_tween.is_valid():
+		_hit_flash_tween.kill()
+
+	sprite.scale = Vector2.ONE
+	sprite.modulate = Color.WHITE
+
+	_hit_scale_tween = create_tween()
+	_hit_scale_tween.tween_property(sprite, "scale", Vector2(1.2, 0.85), 0.08) \
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
+	_hit_scale_tween.tween_property(sprite, "scale", Vector2(0.95, 1.05), 0.12) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
+	_hit_scale_tween.tween_property(sprite, "scale", Vector2.ONE, 0.1) \
+		.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_QUAD)
+
+	_hit_flash_tween = create_tween()
+	_hit_flash_tween.tween_property(sprite, "modulate", Color(1.0, 0.7, 0.7), 0.15)
+	_hit_flash_tween.tween_property(sprite, "modulate", Color.WHITE, 0.15)
+
+
+func _on_health_changed(_amount: int, _world_pos: Vector2, _change_type: String) -> void:
+	if _health_bar and is_instance_valid(_health_bar):
+		_health_bar.update_value(health, max_health)
 
 
 func _add_animation(frames: SpriteFrames, anim_name: String, sheet: Texture2D, frame_count: int, looping: bool = true) -> void:
