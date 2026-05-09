@@ -18,6 +18,8 @@ var base_health_regen_per_second: float = 0.0
 var in_combat_health_regen_multiplier: float = 0.0
 var moving_hp_regen_multiplier: float = 0.25
 var damage_reduction_percent: float = 0.0
+var is_reflecting_damage: bool = false
+var damage_reflect_percent: float = 0.0
 
 var upgrades: Array = []
 
@@ -32,6 +34,7 @@ var _regen_accumulator: float = 0.0
 var _cast_timer: float = 0.0
 var _cast_duration: float = 0.0
 var _casting_ability: Resource = null
+var _casting_target: Node = null
 var _cast_bar: StatusBar = null
 var _cast_bar_offset_y: float = 20.0
 
@@ -78,7 +81,7 @@ func _process_auto_attack(delta: float) -> void:
 func _apply_delayed_damage(attack_target: Character, damage: float, delay: float) -> void:
 	await get_tree().create_timer(delay).timeout
 	if is_instance_valid(attack_target) and attack_target.health > 0.0:
-		attack_target.take_damage(damage)
+		attack_target.take_damage(damage, "auto_attack", self)
 
 
 func _process_health_regen(delta: float) -> void:
@@ -107,12 +110,16 @@ func _process_health_regen(delta: float) -> void:
 		_regen_accumulator = 0.0
 
 
-func take_damage(amount: float, damage_type: String = "auto_attack") -> void:
+func take_damage(amount: float, damage_type: String = "auto_attack", attacker: Character = null) -> void:
 	_combat_timer = 0.0
 	var reduced := amount * (1.0 - damage_reduction_percent / 100.0)
 	health -= reduced
 	damage_taken.emit(int(reduced), _get_floating_number_position(), damage_type)
 	health_changed.emit(-int(reduced), _get_floating_number_position(), damage_type)
+	if is_reflecting_damage and damage_type != "reflect" and attacker != null and is_instance_valid(attacker):
+		var reflect_amount := reduced * (damage_reflect_percent / 100.0)
+		if reflect_amount > 0.0:
+			attacker.take_damage(reflect_amount, "reflect")
 	if health <= 0.0:
 		die()
 
@@ -156,13 +163,14 @@ func _process_casting(delta: float) -> void:
 	if _cast_bar:
 		_cast_bar.update_value(_cast_timer, _cast_duration)
 	if _cast_timer >= _cast_duration:
-		_casting_ability.apply_effect(self)
+		_casting_ability.apply_effect(self, _casting_target)
 		_finish_cast()
 
 
 func _finish_cast() -> void:
 	is_casting = false
 	_casting_ability = null
+	_casting_target = null
 	if _cast_bar:
 		_cast_bar.queue_free()
 		_cast_bar = null
@@ -172,6 +180,7 @@ func _finish_cast() -> void:
 func cancel_cast() -> void:
 	is_casting = false
 	_casting_ability = null
+	_casting_target = null
 	if _cast_bar:
 		_cast_bar.queue_free()
 		_cast_bar = null

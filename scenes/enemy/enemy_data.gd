@@ -22,3 +22,4 @@ extends Resource
 @export var base_health_regen_per_second: float = 0.0
 @export var in_combat_health_regen_multiplier: float = 0.0
 @export var moving_hp_regen_multiplier: float = 0.25
+@export var loot_table: Dictionary = {}

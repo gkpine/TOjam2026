@@ -23,11 +23,12 @@ var _base_positions: PackedVector2Array = []
 var _bounce_tween: Tween
 
 
-func wrap(control: Control) -> void:
-	wrap_rect(Rect2(control.position, control.size))
+func wrap(control: Control, padding_x: float = 0.0, padding_y: float = 0.0) -> void:
+	wrap_rect(Rect2(control.position, control.size), padding_x, padding_y)
 
 
-func wrap_rect(rect: Rect2) -> void:
+func wrap_rect(rect: Rect2, padding_x: float = 0.0, padding_y: float = 0.0) -> void:
+	rect = rect.grow_individual(padding_x, padding_y, padding_x, padding_y)
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 
 	var corner_size := REGIONS[0].size

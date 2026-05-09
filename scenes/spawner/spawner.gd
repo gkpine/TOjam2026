@@ -1,8 +1,6 @@
 extends Node2D
 class_name Spawner
 
-const SMITE_CARD: AbilityData = preload("res://scenes/ability/types/smite.tres")
-
 @export var enemy_scene: PackedScene
 @export var enemy_types: Array[EnemyData] = []
 @export var spawn_radius: float = 300.0
@@ -44,9 +42,26 @@ func _spawn_enemy() -> void:
 	world.add_child(enemy)
 	_spawned_enemies.append(enemy)
 	var exp_reward: float = enemy.enemy_data.exp_reward
+	var loot: Dictionary = enemy.enemy_data.loot_table
 	enemy.died.connect(func(_character: Character):
 		if world.player and is_instance_valid(world.player):
 			world.player.gain_experience(exp_reward)
-			var card := SMITE_CARD.duplicate() as AbilityData
-			world.player.try_grant_card(card)
+			_roll_loot(loot, world.player)
 	)
+
+
+func _roll_loot(loot: Dictionary, player: Player) -> void:
+	if loot.is_empty():
+		return
+	var entries: Array = []
+	for ability_id: StringName in loot:
+		entries.append([ability_id, loot[ability_id] as float])
+	entries.sort_custom(func(a, b): return a[1] < b[1])
+	for entry in entries:
+		if randf() < entry[1]:
+			var path := "res://scenes/ability/types/%s.tres" % entry[0]
+			var ability_res := load(path) as AbilityData
+			if ability_res:
+				var card := ability_res.duplicate() as AbilityData
+				player.try_grant_card(card)
+			return
