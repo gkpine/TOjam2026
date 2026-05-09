@@ -121,9 +121,9 @@ Add it as a child of the `World` node. The world scene (`scenes/world/world.tscn
 ```gdscript
 # Inside world.gd
 func spawn_enemy(enemy_scene: PackedScene, pos: Vector2) -> void:
-    var enemy = enemy_scene.instantiate()
-    enemy.position = pos
-    add_child(enemy)
+	var enemy = enemy_scene.instantiate()
+	enemy.position = pos
+	add_child(enemy)
 ```
 
 Each world has its own physics space, so enemies in World_0 cannot collide with Player_1 in World_1. They are completely separate.
