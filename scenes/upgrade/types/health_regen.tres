@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="UpgradeData" format=3]
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://cjh7eiw32cb7k"]
 
-[ext_resource type="Script" path="res://scenes/upgrade/upgrade_data.gd" id="1"]
+[ext_resource type="Script" uid="uid://b4wrw138n8nvv" path="res://scenes/upgrade/upgrade_data.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
@@ -10,4 +10,3 @@ description = "Increases health regeneration by 2 per second."
 stat_modifiers = {
 "base_health_regen_per_second": 2.0
 }
-relative_probability = 1.0

@@ -17,6 +17,7 @@ var auto_attack_range_px: float = 100.0
 var base_health_regen_per_second: float = 0.0
 var in_combat_health_regen_multiplier: float = 0.0
 var moving_hp_regen_multiplier: float = 0.25
+var damage_reduction_percent: float = 0.0
 
 var upgrades: Array = []
 
@@ -108,9 +109,10 @@ func _process_health_regen(delta: float) -> void:
 
 func take_damage(amount: float, damage_type: String = "auto_attack") -> void:
 	_combat_timer = 0.0
-	health -= amount
-	damage_taken.emit(int(amount), _get_floating_number_position(), damage_type)
-	health_changed.emit(-int(amount), _get_floating_number_position(), damage_type)
+	var reduced := amount * (1.0 - damage_reduction_percent / 100.0)
+	health -= reduced
+	damage_taken.emit(int(reduced), _get_floating_number_position(), damage_type)
+	health_changed.emit(-int(reduced), _get_floating_number_position(), damage_type)
 	if health <= 0.0:
 		die()
 

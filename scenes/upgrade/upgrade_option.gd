@@ -1,10 +1,10 @@
-class_name AbilityOption
+class_name UpgradeOption
 extends Control
 
 const FONT := preload("res://assets/fonts/VT323-Regular.ttf")
 const CursorBracketScene := preload("res://scenes/ui/cursor_bracket.tscn")
-const BANNER_H_TILES := 3
-const BANNER_V_TILES := 1
+const BANNER_H_TILES := 1
+const BANNER_V_TILES := 0
 
 var _banner: PaperBanner
 var _bracket: Node2D
@@ -18,7 +18,9 @@ func setup(upgrade: UpgradeData) -> void:
 	_banner.setup(BANNER_H_TILES, BANNER_V_TILES)
 	add_child(_banner)
 
-	var content := _banner.get_content_rect()
+	var banner_size := _banner.get_banner_size()
+	var text_inset := 16.0
+	var text_width := banner_size.x - text_inset * 2.0
 
 	var name_label := Label.new()
 	name_label.text = upgrade.upgrade_name
@@ -27,8 +29,8 @@ func setup(upgrade: UpgradeData) -> void:
 	name_label.add_theme_color_override("font_color", Color.WHITE)
 	name_label.add_theme_constant_override("outline_size", 4)
 	name_label.add_theme_color_override("font_outline_color", Color.BLACK)
-	name_label.position = content.position + Vector2(4, 0)
-	name_label.size = Vector2(content.size.x - 8, 32)
+	name_label.position = Vector2(text_inset, 20)
+	name_label.size = Vector2(text_width, 32)
 	name_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_banner.add_child(name_label)
 
@@ -39,13 +41,12 @@ func setup(upgrade: UpgradeData) -> void:
 	desc_label.add_theme_color_override("font_color", Color(0.9, 0.9, 0.85))
 	desc_label.add_theme_constant_override("outline_size", 2)
 	desc_label.add_theme_color_override("font_outline_color", Color.BLACK)
-	desc_label.position = content.position + Vector2(4, 34)
-	desc_label.size = Vector2(content.size.x - 8, content.size.y - 34)
+	desc_label.position = Vector2(text_inset, 52)
+	desc_label.size = Vector2(text_width, banner_size.y - 68)
 	desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	desc_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_banner.add_child(desc_label)
 
-	var banner_size := _banner.get_banner_size()
 	custom_minimum_size = banner_size
 	size = banner_size
 

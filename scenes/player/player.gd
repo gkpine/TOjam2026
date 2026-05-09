@@ -4,6 +4,7 @@ class_name Player
 const FRAME_SIZE := 192
 const DEFAULT_DATA: PlayerData = preload("res://scenes/player/default_player.tres")
 const DEFAULT_WHIRLWIND: AbilityData = preload("res://scenes/ability/types/whirlwind.tres")
+const DEFAULT_GUARD: AbilityData = preload("res://scenes/ability/types/guard.tres")
 const LEVEL_DATA: LevelData = preload("res://scenes/player/level_data.tres")
 const MAX_ABILITY_SLOTS := 4
 const UPGRADE_POOL: Array[UpgradeData] = [
@@ -15,8 +16,9 @@ const UPGRADE_POOL: Array[UpgradeData] = [
 signal ability_used(slot_index: int)
 signal ability_cooldown_changed(slot_index: int, remaining: float, total: float)
 signal experience_changed(current_xp: float, xp_required: float)
+signal experience_gained(amount: int, world_pos: Vector2)
 signal leveled_up(new_level: int)
-signal upgrade_selection_requested(options: Array[UpgradeData])
+signal upgrade_selection_requested(options: Array)
 signal upgrade_selection_completed()
 
 var sprite: AnimatedSprite2D
@@ -32,6 +34,9 @@ var _casting_slot: int = -1
 var is_selecting_upgrade: bool = false
 var pending_upgrade_count: int = 0
 var god_mode: bool = false  # debug panel toggles this; bypasses take_damage entirely
+var is_guarding: bool = false
+var _guard_timer: float = 0.0
+var _guard_duration: float = 0.0
 
 
 func setup(index: int, color: Color) -> void:
@@ -42,10 +47,15 @@ func setup(index: int, color: Color) -> void:
 	sprite.sprite_frames = _build_sprite_frames()
 	sprite.play("idle")
 	equip_ability(DEFAULT_WHIRLWIND, 0)
+	equip_ability(DEFAULT_GUARD, 1)
 
 
 func _process(delta: float) -> void:
 	super(delta)
+	if is_guarding:
+		_guard_timer += delta
+		if _guard_timer >= _guard_duration:
+			_end_guard()
 	if InputManager.is_action_just_pressed(player_index, "open_upgrades"):
 		_open_upgrade_menu()
 	if is_selecting_upgrade:
@@ -68,13 +78,23 @@ func _physics_process(_delta: float) -> void:
 		move_and_slide()
 		return
 	var direction := InputManager.get_movement_vector(player_index)
-	velocity = direction * movement_speed
+	var speed := movement_speed
+	if is_guarding:
+		speed *= 0.5
+	velocity = direction * speed
 	move_and_slide()
 	GameState.update_player_position(player_index, global_position)
 
 	if is_attacking:
 		return
-	if velocity != Vector2.ZERO:
+	if is_guarding:
+		if sprite.animation != &"guard":
+			sprite.play("guard")
+		if velocity.x < 0:
+			sprite.flip_h = true
+		elif velocity.x > 0:
+			sprite.flip_h = false
+	elif velocity != Vector2.ZERO:
 		if sprite.animation != &"run":
 			sprite.play("run")
 		if velocity.x < 0:
@@ -95,6 +115,7 @@ func _build_sprite_frames() -> SpriteFrames:
 	_add_animation(frames, "run", load(base_path + "run.png"), 6)
 	_add_animation(frames, "attack", load(base_path + "attack_1.png"), 4, false)
 	_add_animation(frames, "attack_2", load(base_path + "attack_2.png"), 4, false)
+	_add_animation(frames, "guard", load(base_path + "guard.png"), 6)
 
 	frames.remove_animation("default")
 	return frames
@@ -175,6 +196,20 @@ func _apply_stats(data: PlayerData) -> void:
 	level = data.level
 
 
+func start_guard(duration: float) -> void:
+	is_guarding = true
+	_guard_timer = 0.0
+	_guard_duration = duration
+	damage_reduction_percent = 50.0
+
+
+func _end_guard() -> void:
+	is_guarding = false
+	_guard_timer = 0.0
+	_guard_duration = 0.0
+	damage_reduction_percent = 0.0
+
+
 func equip_ability(ability: AbilityData, slot: int) -> void:
 	while abilities.size() <= slot:
 		abilities.append(null)
@@ -215,6 +250,7 @@ func gain_experience(amount: float) -> void:
 	if level >= LEVEL_DATA.max_level:
 		return
 	experience += amount
+	experience_gained.emit(int(amount), _get_floating_number_position())
 	while level < LEVEL_DATA.max_level and experience >= LEVEL_DATA.get_xp_required(level):
 		experience -= LEVEL_DATA.get_xp_required(level)
 		level += 1

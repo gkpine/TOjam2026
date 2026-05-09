@@ -51,7 +51,7 @@ func _process(_delta: float) -> void:
 		var on_cooldown := i < _player.ability_cooldowns.size() and _player.ability_cooldowns[i] > 0.0
 		var button_held := Input.is_action_pressed("p%d_ability_%d" % [_player.player_index + 1, i + 1])
 
-		_slots[i].set_pressed(button_held)
+		_slots[i].set_pressed(on_cooldown or button_held)
 		_slots[i].set_desaturated(on_cooldown or not has_ability)
 		_slots[i].set_icon(_player.abilities[i].icon if has_ability else null)
 		if not on_cooldown:

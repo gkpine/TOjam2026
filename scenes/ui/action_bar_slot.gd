@@ -137,6 +137,17 @@ func set_pressed(value: bool) -> void:
 	for piece in _pieces:
 		(piece.texture as AtlasTexture).atlas = tex
 
+	var content_scale := Vector2(1.08, 0.92) if _pressed else Vector2.ONE
+	var y_offset := 4.0 if _pressed else 0.0
+
+	_icon_rect.pivot_offset = _icon_rect.size / 2.0
+	_icon_rect.scale = content_scale
+	_icon_rect.position.y = (size.y - _icon_rect.size.y) / 2.0 + y_offset
+
+	_cooldown_label.pivot_offset = _cooldown_label.size / 2.0
+	_cooldown_label.scale = content_scale
+	_cooldown_label.position.y = y_offset
+
 
 func set_desaturated(value: bool) -> void:
 	if _desaturated == value:

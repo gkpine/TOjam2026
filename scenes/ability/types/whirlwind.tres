@@ -7,5 +7,5 @@
 script = ExtResource("1")
 ability_id = &"whirlwind"
 ability_name = "Whirlwind"
-animation = &"attack_2"
 icon = ExtResource("2")
+animation = &"attack_2"

@@ -1,13 +1,17 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://ckp1tcgnv4ums"]
 
-[ext_resource type="Script" path="res://scenes/hud/hud.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dipfta43prheq" path="res://scenes/hud/hud.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/hud/health_bar.tscn" id="2_health_bar"]
 [ext_resource type="PackedScene" path="res://scenes/hud/action_bar.tscn" id="3_action_bar"]
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="CanvasLayer" unique_id=1593374264]
 layer = 10
 script = ExtResource("1_script")
 
-[node name="HealthBar" parent="." instance=ExtResource("2_health_bar")]
+[node name="HealthBar" parent="." unique_id=1532711736 instance=ExtResource("2_health_bar")]
+layout_mode = 3
+anchors_preset = 0
 
-[node name="ActionBar" parent="." instance=ExtResource("3_action_bar")]
+[node name="ActionBar" parent="." unique_id=1202080726 instance=ExtResource("3_action_bar")]
+layout_mode = 3
+anchors_preset = 0

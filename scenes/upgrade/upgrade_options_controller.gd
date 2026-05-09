@@ -1,36 +1,56 @@
 class_name UpgradeOptionsController
 extends Control
 
-const OPTION_GAP := -20.0
-const LEFT_MARGIN := 16.0
-const TOP_MARGIN := 16.0
+const OPTION_GAP := 10.0
+const OVERLAY_COLOR := Color(0.0, 0.0, 0.0, 0.55)
 
-var _options: Array[AbilityOption] = []
+var _overlay: ColorRect = null
+var _options: Array[UpgradeOption] = []
 var _selected_index: int = 0
 var _player_index: int = 0
 var _player: Player = null
-var _upgrade_data: Array[UpgradeData] = []
+var _upgrade_data: Array = []
 
 
 func setup(player: Player) -> void:
 	_player = player
 	_player_index = player.player_index
+	var vp_size := get_viewport_rect().size
+	size = vp_size
+
+	_overlay = ColorRect.new()
+	_overlay.size = vp_size
+	_overlay.color = OVERLAY_COLOR
+	_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_overlay)
+
 	player.upgrade_selection_requested.connect(_on_selection_requested)
 	player.upgrade_selection_completed.connect(_on_selection_completed)
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
-func _on_selection_requested(options: Array[UpgradeData]) -> void:
-	_upgrade_data = options
+func _on_selection_requested(options: Array) -> void:
 	_clear_options()
+	_upgrade_data = options
 
 	for i in range(options.size()):
-		var option := AbilityOption.new()
+		var option := UpgradeOption.new()
 		option.setup(options[i])
-		option.position = Vector2(LEFT_MARGIN, TOP_MARGIN + i * (option.size.y + OPTION_GAP))
 		add_child(option)
 		_options.append(option)
+
+	var card_size := _options[0].size
+	var n := _options.size()
+	var vp_size := get_viewport_rect().size
+	var total_width := n * card_size.x + (n - 1) * OPTION_GAP
+	var x_start := (vp_size.x - total_width) / 2.0
+	var y_pos := (vp_size.y - card_size.y) / 2.0
+
+	var x_offset := x_start
+	for option in _options:
+		option.position = Vector2(x_offset, y_pos)
+		x_offset += card_size.x + OPTION_GAP
 
 	_selected_index = 0
 	_update_selection()
@@ -45,10 +65,10 @@ func _on_selection_completed() -> void:
 func _process(_delta: float) -> void:
 	if not visible or _player == null:
 		return
-	if InputManager.is_action_just_pressed(_player_index, "move_up"):
+	if InputManager.is_action_just_pressed(_player_index, "move_left"):
 		_selected_index = maxi(_selected_index - 1, 0)
 		_update_selection()
-	elif InputManager.is_action_just_pressed(_player_index, "move_down"):
+	elif InputManager.is_action_just_pressed(_player_index, "move_right"):
 		_selected_index = mini(_selected_index + 1, _options.size() - 1)
 		_update_selection()
 	if InputManager.is_action_just_pressed(_player_index, "switch_target"):
