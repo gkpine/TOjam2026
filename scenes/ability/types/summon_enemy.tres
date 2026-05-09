@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="SummonEnemyData" format=3]
+[gd_resource type="Resource" script_class="SummonEnemyData" format=3 uid="uid://7ptnc1bwv4tx"]
 
-[ext_resource type="Script" path="res://scenes/ability/types/summon_enemy.gd" id="1"]
-[ext_resource type="Texture2D" path="res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_03.png" id="2"]
+[ext_resource type="Script" uid="uid://b4n7ihba1r1o1" path="res://scenes/ability/types/summon_enemy.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://boweggys0qd4i" path="res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_03.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -11,4 +11,4 @@ cooldown = 0.0
 icon = ExtResource("2")
 is_card = true
 num_charges = 1
-cast_time = 3.0
+cast_time = 1.5

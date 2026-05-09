@@ -68,8 +68,4 @@ func _on_cooldown_changed(slot: int, remaining: float, _total: float) -> void:
 
 
 func _update_slot_label(slot: int) -> void:
-	var has_ability := slot < _player.abilities.size() and _player.abilities[slot] != null
-	if has_ability and _player.abilities[slot].is_card:
-		_slots[slot].set_cooldown_text(str(_player.abilities[slot].num_charges))
-	else:
 		_slots[slot].set_cooldown_text("")
