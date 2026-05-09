@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/combat/floating_combat_number.gd" id="1_script"]
+
+[node name="FloatingCombatNumber" type="RichTextLabel"]
+z_index = 10
+offset_right = 100.0
+offset_bottom = 40.0
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+script = ExtResource("1_script")
