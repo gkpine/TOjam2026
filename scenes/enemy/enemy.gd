@@ -2,12 +2,15 @@ extends Character
 class_name Enemy
 
 @export var enemy_data: EnemyData
+@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 
 var sprite: AnimatedSprite2D
 var stop_distance: float = 60.0
 var _health_bar: StatusBar
 var _hit_scale_tween: Tween
 var _hit_flash_tween: Tween
+var _slide_tangent: Vector2 = Vector2.ZERO
+var _slide_persist_frames: int = 0
 
 
 func setup(data: EnemyData) -> void:
@@ -55,28 +58,76 @@ func _acquire_target() -> void:
 			target = player
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if target == null or not is_instance_valid(target):
 		target = null
 		velocity = Vector2.ZERO
 		if sprite and not is_attacking and sprite.animation != &"idle":
 			sprite.play("idle")
+		move_and_slide()
 		return
 
+	nav_agent.target_position = target.global_position
+
 	var dist := global_position.distance_to(target.global_position)
-	if dist <= stop_distance:
+	if dist <= stop_distance or nav_agent.is_navigation_finished():
 		velocity = Vector2.ZERO
 		if sprite and not is_attacking and sprite.animation != &"idle":
 			sprite.play("idle")
 	else:
-		var direction := (target.global_position - global_position).normalized()
+		var next_pos := nav_agent.get_next_path_position()
+		var direction := (next_pos - global_position).normalized()
 		velocity = direction * movement_speed
 		if sprite and not is_attacking:
 			if sprite.animation != &"run":
 				sprite.play("run")
 			sprite.flip_h = velocity.x < 0
+
+	var requested_speed := velocity.length()
+	move_and_slide()
+	if requested_speed > 0.0 and get_last_motion().length() < requested_speed * delta * 0.3:
+		_slide_along_obstacle(requested_speed)
+	else:
+		_slide_persist_frames = 0
+
+
+func _slide_along_obstacle(speed: float) -> void:
+	if target == null or not is_instance_valid(target):
+		return
+
+	var tangent: Vector2
+	if _slide_persist_frames > 0 and _slide_tangent != Vector2.ZERO:
+		tangent = _slide_tangent
+		_slide_persist_frames -= 1
+	else:
+		if get_slide_collision_count() == 0:
+			return
+		var avg_normal := Vector2.ZERO
+		for i in range(get_slide_collision_count()):
+			avg_normal += get_slide_collision(i).get_normal()
+		if avg_normal.length_squared() == 0.0:
+			return
+		avg_normal = avg_normal.normalized()
+		var path_dir := _path_lookahead_direction()
+		if path_dir.length_squared() < 1.0:
+			return
+		tangent = Vector2(-avg_normal.y, avg_normal.x)
+		if tangent.dot(path_dir) < 0.0:
+			tangent = -tangent
+		_slide_tangent = tangent
+		_slide_persist_frames = 6
+
+	velocity = tangent * speed
 	move_and_slide()
 
+
+func _path_lookahead_direction() -> Vector2:
+	var path := nav_agent.get_current_navigation_path()
+	if path.size() == 0:
+		return target.global_position - global_position
+	var idx := nav_agent.get_current_navigation_path_index()
+	var look_idx: int = mini(idx + 2, path.size() - 1)
+	return path[look_idx] - global_position
 
 func _apply_stats() -> void:
 	health = enemy_data.health
