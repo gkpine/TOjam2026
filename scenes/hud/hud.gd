@@ -2,7 +2,6 @@ extends CanvasLayer
 
 const SMALL_BAR_BASE := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png")
 const SMALL_BAR_FILL := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png")
-const FONT := preload("res://assets/fonts/VT323-Regular.ttf")
 const MARGIN := 16.0
 const XP_BAR_HEIGHT := 42.0
 
@@ -37,11 +36,7 @@ func setup(player: Player) -> void:
 
 	_level_label = Label.new()
 	_level_label.text = "Lv. %d" % player.level
-	_level_label.add_theme_font_override("font", FONT)
 	_level_label.add_theme_font_size_override("font_size", 32)
-	_level_label.add_theme_color_override("font_color", Color.WHITE)
-	_level_label.add_theme_constant_override("outline_size", 4)
-	_level_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	_level_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_level_label.anchor_left = 0.0
 	_level_label.anchor_top = 1.0
