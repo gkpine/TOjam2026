@@ -69,7 +69,7 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_eq35o"]
 radius = 45.0
-height = 90.0
+height = 136.0
 
 [node name="Tree" type="Node2D" unique_id=1876242429]
 z_index = 2
@@ -84,3 +84,7 @@ sprite_frames = SubResource("SpriteFrames_xx2gc")
 z_index = 1
 position = Vector2(0, 76)
 shape = SubResource("CapsuleShape2D_eq35o")
+
+[node name="NavigationObstacle2D" type="NavigationObstacle2D" parent="." unique_id=1654375825]
+position = Vector2(1, 76)
+radius = 78.94

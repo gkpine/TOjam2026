@@ -14,3 +14,5 @@ script = ExtResource("1_script")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1708589730]
 shape = SubResource("CircleShape2D_1")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=143875240]
