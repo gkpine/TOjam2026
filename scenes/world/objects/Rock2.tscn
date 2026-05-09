@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://c3ws4jad4b74o"]
+
+[ext_resource type="Texture2D" uid="uid://b8ggs2evufdwb" path="res://scenes/world/objects/Rock2.png" id="1_qkj2v"]
+
+[node name="Rock2" type="Node2D" unique_id=1919714678]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1098831337]
+texture = ExtResource("1_qkj2v")
