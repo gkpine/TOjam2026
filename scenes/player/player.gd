@@ -3,12 +3,19 @@ class_name Player
 
 const FRAME_SIZE := 192
 const DEFAULT_DATA: PlayerData = preload("res://scenes/player/default_player.tres")
+const DEFAULT_WHIRLWIND: AbilityData = preload("res://scenes/ability/types/whirlwind.tres")
+const MAX_ABILITY_SLOTS := 4
+
+signal ability_used(slot_index: int)
+signal ability_cooldown_changed(slot_index: int, remaining: float, total: float)
 
 var sprite: AnimatedSprite2D
 var player_index: int = 0
 var player_color: Color = Color.WHITE
 var potential_targets: Array[Character] = []
 var _prev_target_list_empty: bool = true
+var abilities: Array[AbilityData] = []
+var ability_cooldowns: Array[float] = []
 
 
 func setup(index: int, color: Color) -> void:
@@ -18,6 +25,7 @@ func setup(index: int, color: Color) -> void:
 	sprite = $AnimatedSprite2D
 	sprite.sprite_frames = _build_sprite_frames()
 	sprite.play("idle")
+	equip_ability(DEFAULT_WHIRLWIND, 0)
 
 
 func _process(delta: float) -> void:
@@ -26,6 +34,12 @@ func _process(delta: float) -> void:
 	_handle_auto_target()
 	if InputManager.is_action_just_pressed(player_index, "switch_target"):
 		_cycle_target()
+	_tick_ability_cooldowns(delta)
+	for i in range(abilities.size()):
+		if abilities[i] == null:
+			continue
+		if InputManager.is_action_just_pressed(player_index, "ability_%d" % (i + 1)):
+			_try_use_ability(i)
 
 
 func _physics_process(_delta: float) -> void:
@@ -56,6 +70,7 @@ func _build_sprite_frames() -> SpriteFrames:
 	_add_animation(frames, "idle", load(base_path + "idle.png"), 8)
 	_add_animation(frames, "run", load(base_path + "run.png"), 6)
 	_add_animation(frames, "attack", load(base_path + "attack_1.png"), 4, false)
+	_add_animation(frames, "attack_2", load(base_path + "attack_2.png"), 4, false)
 
 	frames.remove_animation("default")
 	return frames
@@ -72,9 +87,9 @@ func _add_animation(frames: SpriteFrames, anim_name: String, sheet: Texture2D, f
 		frames.add_frame(anim_name, atlas)
 
 
-func play_attack_animation() -> void:
+func play_attack_animation(anim_name: StringName = &"attack") -> void:
 	is_attacking = true
-	sprite.play("attack")
+	sprite.play(anim_name)
 	await sprite.animation_finished
 	is_attacking = false
 
@@ -129,6 +144,33 @@ func _apply_stats(data: PlayerData) -> void:
 	movement_speed = data.movement_speed
 	target_range_px = data.target_range_px
 	auto_attack_range_px = data.auto_attack_range_px
+
+
+func equip_ability(ability: AbilityData, slot: int) -> void:
+	while abilities.size() <= slot:
+		abilities.append(null)
+		ability_cooldowns.append(0.0)
+	abilities[slot] = ability
+	ability_cooldowns[slot] = 0.0
+
+
+func _try_use_ability(slot: int) -> void:
+	if slot >= abilities.size() or abilities[slot] == null:
+		return
+	if ability_cooldowns[slot] > 0.0:
+		return
+	if abilities[slot].execute(self):
+		ability_cooldowns[slot] = abilities[slot].cooldown
+		ability_used.emit(slot)
+		if abilities[slot].animation != &"":
+			play_attack_animation(abilities[slot].animation)
+
+
+func _tick_ability_cooldowns(delta: float) -> void:
+	for i in range(ability_cooldowns.size()):
+		if ability_cooldowns[i] > 0.0:
+			ability_cooldowns[i] = maxf(ability_cooldowns[i] - delta, 0.0)
+			ability_cooldown_changed.emit(i, ability_cooldowns[i], abilities[i].cooldown)
 
 
 func die() -> void:

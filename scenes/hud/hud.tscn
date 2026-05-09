@@ -1,10 +1,13 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scenes/hud/hud.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/hud/health_bar.tscn" id="2_health_bar"]
+[ext_resource type="PackedScene" path="res://scenes/hud/ability_bar.tscn" id="3_ability_bar"]
 
 [node name="HUD" type="CanvasLayer"]
 layer = 10
 script = ExtResource("1_script")
 
 [node name="HealthBar" parent="." instance=ExtResource("2_health_bar")]
+
+[node name="AbilityBar" parent="." instance=ExtResource("3_ability_bar")]

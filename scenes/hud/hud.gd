@@ -3,11 +3,13 @@ extends CanvasLayer
 var _player: Player = null
 
 @onready var health_bar: Control = $HealthBar
+@onready var ability_bar: Control = $AbilityBar
 
 
 func setup(player: Player) -> void:
 	_player = player
 	health_bar.update_health(player.health, player.max_health)
+	ability_bar.setup(player)
 	player.damage_taken.connect(_on_player_damage_taken)
 	player.died.connect(_on_player_died)
 
