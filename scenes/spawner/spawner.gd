@@ -38,5 +38,11 @@ func _spawn_enemy() -> void:
 	var angle := randf() * TAU
 	var dist := randf() * spawn_radius
 	enemy.position = global_position + Vector2(cos(angle), sin(angle)) * dist
-	get_parent().add_child(enemy)
+	var world := get_parent()
+	world.add_child(enemy)
 	_spawned_enemies.append(enemy)
+	var exp_reward: float = enemy.enemy_data.exp_reward
+	enemy.died.connect(func(_character: Character):
+		if world.player and is_instance_valid(world.player):
+			world.player.gain_experience(exp_reward)
+	)

@@ -27,15 +27,47 @@ func _on_child_entered(node: Node) -> void:
 
 
 func _connect_character(character: Character) -> void:
-	var callback := _on_damage_taken.bind(character)
-	if not character.damage_taken.is_connected(callback):
-		character.damage_taken.connect(callback)
+	var damage_callback := _on_damage_taken.bind(character)
+	if not character.damage_taken.is_connected(damage_callback):
+		character.damage_taken.connect(damage_callback)
+	var health_callback := _on_health_changed.bind(character)
+	if not character.health_changed.is_connected(health_callback):
+		character.health_changed.connect(health_callback)
 
 
 func _on_damage_taken(amount: int, pos: Vector2, damage_type: String, character: Character) -> void:
+	if character is Player:
+		return
 	var number := _number_scene.instantiate()
-	number.damage_amount = amount
+	number.amount = amount
 	number.damage_type = damage_type
-	number.is_player_damage = character is Player
+	number.anim_config = _build_anim_config()
 	number.global_position = pos
 	add_child(number)
+
+
+func _on_health_changed(amount: int, pos: Vector2, _change_type: String, character: Character) -> void:
+	if character is Player:
+		return
+	if amount <= 0:
+		return
+	var number := _number_scene.instantiate()
+	number.amount = amount
+	number.is_heal = true
+	number.anim_config = _build_anim_config()
+	number.global_position = pos
+	add_child(number)
+
+
+func _build_anim_config() -> Dictionary:
+	return {
+		"duration": animation_duration_seconds,
+		"bounce_scale": bounce_scale,
+		"bounce_start": bounce_start_time_relative,
+		"bounce_end": bounce_end_time_relative,
+		"float_start": float_start_time_relative,
+		"float_end": float_end_time_relative,
+		"float_distance": float_distance_px,
+		"fade_start": fade_start_time_relative,
+		"fade_end": fade_end_time_relative,
+	}

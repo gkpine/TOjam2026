@@ -1,20 +1,19 @@
-[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://bvdisiuokxigr"]
 
-[ext_resource type="Script" path="res://scenes/enemy/enemy_data.gd" id="1"]
+[ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
 enemy_name = "turtle"
 frame_size = 320
+visible_sprite_height = 288
 idle_frames = 10
 attack_frames = 10
 run_frames = 7
 health = 80.0
 base_damage = 8.0
-strength = 0.0
 auto_attack_per_second = 0.5
 auto_attack_delay = 0.5
 movement_speed = 60.0
-target_range_px = 250.0
-auto_attack_range_px = 80.0
 collision_radius = 26.0
+exp_reward = 20.0

@@ -1,20 +1,19 @@
-[gd_resource type="Resource" script_class="EnemyData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://6f03eqtoyha"]
 
-[ext_resource type="Script" path="res://scenes/enemy/enemy_data.gd" id="1"]
+[ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
 enemy_name = "bear"
 frame_size = 256
-idle_frames = 8
+visible_sprite_height = 230
 attack_frames = 9
 run_frames = 5
 health = 50.0
 base_damage = 10.0
-strength = 0.0
 auto_attack_per_second = 0.7
 auto_attack_delay = 0.5
 movement_speed = 100.0
-target_range_px = 250.0
 auto_attack_range_px = 90.0
 collision_radius = 22.0
+exp_reward = 15.0
