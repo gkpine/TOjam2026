@@ -6,6 +6,8 @@ extends Resource
 @export var description: String = ""
 @export var stat_modifiers: Dictionary = {}
 @export var relative_probability: float = 1.0
+@export var limit: int = -1
+@export var modify_ability_id: StringName = &""
 
 
 static func pick_weighted(pool: Array[UpgradeData], count: int) -> Array[UpgradeData]:

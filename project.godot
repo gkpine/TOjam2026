@@ -28,7 +28,7 @@ window/stretch/mode="canvas_items"
 
 [gui]
 
-theme/custom_font="res://assets/fonts/VT323-Regular.ttf"
+theme/custom="res://assets/theme/default_theme.tres"
 
 [layer_names]
 

@@ -163,8 +163,8 @@ func play_attack_animation(anim_name: StringName = &"attack") -> void:
 	is_attacking = false
 
 
-func take_damage(amount: float, damage_type: String = "auto_attack") -> void:
-	super.take_damage(amount, damage_type)
+func take_damage(amount: float, damage_type: String = "auto_attack", attacker: Character = null) -> void:
+	super.take_damage(amount, damage_type, attacker)
 	_play_hit_reaction()
 
 

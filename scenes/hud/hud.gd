@@ -56,6 +56,10 @@ func setup(player: Player) -> void:
 	add_child(upgrade_ui)
 	upgrade_ui.setup(player)
 
+	var target_ui := PlayerSelectController.new()
+	add_child(target_ui)
+	target_ui.setup(player)
+
 	player.experience_changed.connect(_on_player_experience_changed)
 	player.leveled_up.connect(_on_player_leveled_up)
 

@@ -18,3 +18,4 @@ movement_speed = 80.0
 auto_attack_range_px = 100.0
 collision_radius = 28.0
 exp_reward = 30.0
+loot_table = {&"smite": 0.4, &"summon_enemy": 0.5}

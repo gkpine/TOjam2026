@@ -14,5 +14,5 @@ func execute(caster: Player) -> bool:
 	for child in world.get_children():
 		if child is Enemy and is_instance_valid(child):
 			if caster.global_position.distance_to(child.global_position) <= range_px:
-				child.take_damage(damage, "ability")
+				child.take_damage(damage, "ability", caster)
 	return true

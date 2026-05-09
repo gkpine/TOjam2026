@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SummonEnemyData" format=3]
+
+[ext_resource type="Script" path="res://scenes/ability/types/summon_enemy.gd" id="1"]
+[ext_resource type="Texture2D" path="res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_03.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+ability_id = &"summon_enemy"
+ability_name = "Summon Enemy"
+cooldown = 0.0
+icon = ExtResource("2")
+is_card = true
+num_charges = 1
+cast_time = 3.0

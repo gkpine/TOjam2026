@@ -11,6 +11,7 @@ const UPGRADE_POOL: Array[UpgradeData] = [
 	preload("res://scenes/upgrade/types/max_health.tres"),
 	preload("res://scenes/upgrade/types/strength.tres"),
 	preload("res://scenes/upgrade/types/health_regen.tres"),
+	preload("res://scenes/upgrade/types/damage_reflect.tres"),
 ]
 
 signal ability_used(slot_index: int)
@@ -20,6 +21,7 @@ signal experience_gained(amount: int, world_pos: Vector2)
 signal leveled_up(new_level: int)
 signal upgrade_selection_requested(options: Array)
 signal upgrade_selection_completed()
+signal target_selection_requested(slot: int)
 
 var sprite: AnimatedSprite2D
 var player_index: int = 0
@@ -32,6 +34,7 @@ var experience: float = 0.0
 var level: int = 1
 var _casting_slot: int = -1
 var is_selecting_upgrade: bool = false
+var is_selecting_target: bool = false
 var pending_upgrade_count: int = 0
 var god_mode: bool = false  # debug panel toggles this; bypasses take_damage entirely
 var is_guarding: bool = false
@@ -58,7 +61,7 @@ func _process(delta: float) -> void:
 			_end_guard()
 	if InputManager.is_action_just_pressed(player_index, "open_upgrades"):
 		_open_upgrade_menu()
-	if is_selecting_upgrade:
+	if is_selecting_upgrade or is_selecting_target:
 		return
 	_update_target_list()
 	_handle_auto_target()
@@ -69,11 +72,14 @@ func _process(delta: float) -> void:
 		if abilities[i] == null:
 			continue
 		if InputManager.is_action_just_pressed(player_index, "ability_%d" % (i + 1)):
-			_try_use_ability(i)
+			if abilities[i].is_card and abilities[i].needs_player_target():
+				_request_target_selection(i)
+			else:
+				_try_use_ability(i)
 
 
 func _physics_process(_delta: float) -> void:
-	if is_casting or is_selecting_upgrade:
+	if is_casting or is_selecting_upgrade or is_selecting_target:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -208,6 +214,8 @@ func _end_guard() -> void:
 	_guard_timer = 0.0
 	_guard_duration = 0.0
 	damage_reduction_percent = 0.0
+	is_reflecting_damage = false
+	damage_reflect_percent = 0.0
 
 
 func equip_ability(ability: AbilityData, slot: int) -> void:
@@ -237,6 +245,49 @@ func _try_use_ability(slot: int) -> void:
 			play_attack_animation(ability.animation)
 
 
+func _request_target_selection(slot: int) -> void:
+	if slot >= abilities.size() or abilities[slot] == null:
+		return
+	if ability_cooldowns[slot] > 0.0:
+		return
+	if is_casting:
+		return
+	var opponents: Array[Player] = []
+	for p in GameState.players:
+		if p != null and is_instance_valid(p) and p != self and p is Player:
+			opponents.append(p as Player)
+	if opponents.is_empty():
+		return
+	if opponents.size() == 1:
+		_use_card_ability_on_target(slot, opponents[0])
+		return
+	target_selection_requested.emit(slot)
+
+
+func _use_card_ability_on_target(slot: int, target_player: Player) -> void:
+	if slot >= abilities.size() or abilities[slot] == null:
+		return
+	if ability_cooldowns[slot] > 0.0:
+		return
+	if is_casting:
+		return
+	var ability := abilities[slot]
+	_casting_target = target_player
+	if ability.cast_time > 0.0:
+		_casting_slot = slot
+		start_cast(ability)
+		ability_used.emit(slot)
+	else:
+		ability.apply_effect(self, target_player)
+		ability_cooldowns[slot] = ability.cooldown
+		ability_used.emit(slot)
+		_casting_target = null
+		if ability.is_card:
+			ability.num_charges -= 1
+			if ability.num_charges <= 0:
+				abilities[slot] = null
+
+
 func _tick_ability_cooldowns(delta: float) -> void:
 	for i in range(ability_cooldowns.size()):
 		if abilities[i] == null:
@@ -264,11 +315,30 @@ func gain_experience(amount: float) -> void:
 
 
 func _open_upgrade_menu() -> void:
-	if pending_upgrade_count <= 0 or is_selecting_upgrade:
+	if pending_upgrade_count <= 0 or is_selecting_upgrade or is_selecting_target:
 		return
 	is_selecting_upgrade = true
-	var options := UpgradeData.pick_weighted(UPGRADE_POOL, 3)
+	var available := _get_available_upgrades()
+	if available.is_empty():
+		is_selecting_upgrade = false
+		return
+	var options := UpgradeData.pick_weighted(available, 3)
 	upgrade_selection_requested.emit(options)
+
+
+func _get_available_upgrades() -> Array[UpgradeData]:
+	var pool: Array[UpgradeData] = []
+	for upgrade in UPGRADE_POOL:
+		if upgrade.limit < 0:
+			pool.append(upgrade)
+			continue
+		var count := 0
+		for owned in upgrades:
+			if owned.upgrade_id == upgrade.upgrade_id:
+				count += 1
+		if count < upgrade.limit:
+			pool.append(upgrade)
+	return pool
 
 
 func apply_selected_upgrade(upgrade: UpgradeData) -> void:
@@ -298,10 +368,10 @@ func _on_cast_finished() -> void:
 			abilities[slot] = null
 
 
-func take_damage(amount: float, damage_type: String = "auto_attack") -> void:
+func take_damage(amount: float, damage_type: String = "auto_attack", attacker: Character = null) -> void:
 	if god_mode:
 		return
-	super.take_damage(amount, damage_type)
+	super.take_damage(amount, damage_type, attacker)
 
 
 func die() -> void:

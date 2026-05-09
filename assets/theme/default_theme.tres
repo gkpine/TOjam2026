@@ -1,0 +1,34 @@
+[gd_resource type="Theme" load_steps=2 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Jersey25-Regular.ttf" id="1_font"]
+
+[resource]
+default_font = ExtResource("1_font")
+
+Button/colors/font_shadow_color = Color(0, 0, 0, 0.7)
+Button/constants/shadow_offset_x = 2
+Button/constants/shadow_offset_y = 2
+CheckBox/colors/font_shadow_color = Color(0, 0, 0, 0.7)
+CheckBox/constants/shadow_offset_x = 2
+CheckBox/constants/shadow_offset_y = 2
+CheckButton/colors/font_shadow_color = Color(0, 0, 0, 0.7)
+CheckButton/constants/shadow_offset_x = 2
+CheckButton/constants/shadow_offset_y = 2
+Label/colors/font_shadow_color = Color(0, 0, 0, 0.7)
+Label/constants/shadow_offset_x = 2
+Label/constants/shadow_offset_y = 2
+LineEdit/colors/font_shadow_color = Color(0, 0, 0, 0.7)
+LineEdit/constants/shadow_offset_x = 2
+LineEdit/constants/shadow_offset_y = 2
+LinkButton/colors/font_shadow_color = Color(0, 0, 0, 0.7)
+LinkButton/constants/shadow_offset_x = 2
+LinkButton/constants/shadow_offset_y = 2
+MenuButton/colors/font_shadow_color = Color(0, 0, 0, 0.7)
+MenuButton/constants/shadow_offset_x = 2
+MenuButton/constants/shadow_offset_y = 2
+OptionButton/colors/font_shadow_color = Color(0, 0, 0, 0.7)
+OptionButton/constants/shadow_offset_x = 2
+OptionButton/constants/shadow_offset_y = 2
+RichTextLabel/colors/font_shadow_color = Color(0, 0, 0, 0.7)
+RichTextLabel/constants/shadow_offset_x = 2
+RichTextLabel/constants/shadow_offset_y = 2
