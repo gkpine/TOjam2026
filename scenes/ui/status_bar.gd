@@ -56,6 +56,9 @@ func _add_piece(bar_base: Texture2D, region: Rect2, x_pos: float) -> void:
 func update_value(current: float, maximum: float) -> void:
 	if _fill == null:
 		return
+	if maximum <= 0.0:
+		_fill.size.x = _fill_max_width
+		return
 	var ratio := clampf(current / maximum, 0.0, 1.0)
 	_fill.size.x = _fill_max_width * ratio
 
