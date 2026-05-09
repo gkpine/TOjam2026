@@ -27,6 +27,11 @@
 [ext_resource type="PackedScene" uid="uid://l0pqw8x7rq1n" path="res://scenes/world/objects/Bush2.tscn" id="25_ckok1"]
 [ext_resource type="PackedScene" uid="uid://ddt384mvuahix" path="res://scenes/world/objects/Bush3.tscn" id="26_2x71e"]
 [ext_resource type="PackedScene" uid="uid://bx2nijf3lpa3" path="res://scenes/world/objects/Bush4.tscn" id="27_wnndm"]
+[ext_resource type="PackedScene" uid="uid://c1f7wllud4dxa" path="res://scenes/world/objects/tree2.tscn" id="28_tree2"]
+[ext_resource type="PackedScene" uid="uid://c5jv8hwfsnsur" path="res://scenes/world/objects/tree3.tscn" id="29_tree3"]
+[ext_resource type="PackedScene" uid="uid://d2arnvk4i1hw" path="res://scenes/world/objects/tree4.tscn" id="30_tree4"]
+[ext_resource type="PackedScene" uid="uid://d1adils5wbk0q" path="res://scenes/world/objects/Rock1.tscn" id="31_rock1"]
+[ext_resource type="PackedScene" uid="uid://c3ws4jad4b74o" path="res://scenes/world/objects/Rock2.tscn" id="32_rock2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tytul"]
 texture = ExtResource("17_wbwoo")
@@ -368,9 +373,6 @@ position = Vector2(-180, 490)
 [node name="Bush27" parent="Map/TreesAndBushes" unique_id=100000019 instance=ExtResource("25_ckok1")]
 position = Vector2(1560, 270)
 
-[node name="Bush28" parent="Map/TreesAndBushes" unique_id=100000020 instance=ExtResource("27_wnndm")]
-position = Vector2(1640, 220)
-
 [node name="Bush29" parent="Map/TreesAndBushes" unique_id=100000021 instance=ExtResource("24_xq18t")]
 position = Vector2(820, 720)
 
@@ -403,6 +405,258 @@ position = Vector2(1700, 600)
 
 [node name="Bush39" parent="Map/TreesAndBushes" unique_id=100000031 instance=ExtResource("25_ckok1")]
 position = Vector2(1740, 640)
+
+[node name="Tree12" parent="Map/TreesAndBushes" unique_id=200000001 instance=ExtResource("29_tree3")]
+position = Vector2(430, -200)
+
+[node name="Tree13" parent="Map/TreesAndBushes" unique_id=200000002 instance=ExtResource("30_tree4")]
+position = Vector2(550, 150)
+
+[node name="Tree14" parent="Map/TreesAndBushes" unique_id=200000003 instance=ExtResource("28_tree2")]
+position = Vector2(-100, 100)
+
+[node name="Tree15" parent="Map/TreesAndBushes" unique_id=200000004 instance=ExtResource("29_tree3")]
+position = Vector2(1350, 300)
+
+[node name="Tree16" parent="Map/TreesAndBushes" unique_id=200000005 instance=ExtResource("30_tree4")]
+position = Vector2(1050, 600)
+
+[node name="Tree17" parent="Map/TreesAndBushes" unique_id=200000006 instance=ExtResource("28_tree2")]
+position = Vector2(700, 400)
+
+[node name="Tree18" parent="Map/TreesAndBushes" unique_id=200000007 instance=ExtResource("29_tree3")]
+position = Vector2(-100, 400)
+
+[node name="Bush40" parent="Map/TreesAndBushes" unique_id=200000009 instance=ExtResource("24_xq18t")]
+position = Vector2(450, -180)
+
+[node name="Bush41" parent="Map/TreesAndBushes" unique_id=200000010 instance=ExtResource("26_2x71e")]
+position = Vector2(380, -210)
+
+[node name="Bush42" parent="Map/TreesAndBushes" unique_id=200000011 instance=ExtResource("25_ckok1")]
+position = Vector2(570, 130)
+
+[node name="Bush43" parent="Map/TreesAndBushes" unique_id=200000012 instance=ExtResource("27_wnndm")]
+position = Vector2(520, 180)
+
+[node name="Bush44" parent="Map/TreesAndBushes" unique_id=200000013 instance=ExtResource("24_xq18t")]
+position = Vector2(-130, 80)
+
+[node name="Bush45" parent="Map/TreesAndBushes" unique_id=200000014 instance=ExtResource("26_2x71e")]
+position = Vector2(-80, 130)
+
+[node name="Bush46" parent="Map/TreesAndBushes" unique_id=200000015 instance=ExtResource("25_ckok1")]
+position = Vector2(1370, 280)
+
+[node name="Bush47" parent="Map/TreesAndBushes" unique_id=200000016 instance=ExtResource("27_wnndm")]
+position = Vector2(1320, 320)
+
+[node name="Bush48" parent="Map/TreesAndBushes" unique_id=200000017 instance=ExtResource("24_xq18t")]
+position = Vector2(1080, 580)
+
+[node name="Bush49" parent="Map/TreesAndBushes" unique_id=200000018 instance=ExtResource("26_2x71e")]
+position = Vector2(1020, 620)
+
+[node name="Bush50" parent="Map/TreesAndBushes" unique_id=200000019 instance=ExtResource("25_ckok1")]
+position = Vector2(730, 380)
+
+[node name="Bush51" parent="Map/TreesAndBushes" unique_id=200000020 instance=ExtResource("27_wnndm")]
+position = Vector2(-80, 380)
+
+[node name="Bush52" parent="Map/TreesAndBushes" unique_id=200000021 instance=ExtResource("24_xq18t")]
+position = Vector2(-130, 420)
+
+[node name="Rock1A" parent="Map/TreesAndBushes" unique_id=200000024 instance=ExtResource("31_rock1")]
+position = Vector2(300, 130)
+
+[node name="Rock1B" parent="Map/TreesAndBushes" unique_id=200000025 instance=ExtResource("32_rock2")]
+position = Vector2(480, -180)
+
+[node name="Rock1C" parent="Map/TreesAndBushes" unique_id=200000026 instance=ExtResource("31_rock1")]
+position = Vector2(570, 110)
+
+[node name="Rock1D" parent="Map/TreesAndBushes" unique_id=200000027 instance=ExtResource("32_rock2")]
+position = Vector2(-150, 130)
+
+[node name="Rock1E" parent="Map/TreesAndBushes" unique_id=200000028 instance=ExtResource("31_rock1")]
+position = Vector2(1390, 270)
+
+[node name="Rock1F" parent="Map/TreesAndBushes" unique_id=200000029 instance=ExtResource("32_rock2")]
+position = Vector2(1100, 590)
+
+[node name="Rock1G" parent="Map/TreesAndBushes" unique_id=200000030 instance=ExtResource("31_rock1")]
+position = Vector2(740, 380)
+
+[node name="Rock1H" parent="Map/TreesAndBushes" unique_id=200000031 instance=ExtResource("32_rock2")]
+position = Vector2(-130, 410)
+
+[node name="Rock1I" parent="Map/TreesAndBushes" unique_id=200000032 instance=ExtResource("31_rock1")]
+position = Vector2(1490, 90)
+
+[node name="Rock1J" parent="Map/TreesAndBushes" unique_id=200000033 instance=ExtResource("32_rock2")]
+position = Vector2(820, 730)
+
+[node name="Rock1K" parent="Map/TreesAndBushes" unique_id=200000034 instance=ExtResource("31_rock1")]
+position = Vector2(1290, 350)
+
+[node name="Rock1L" parent="Map/TreesAndBushes" unique_id=200000035 instance=ExtResource("32_rock2")]
+position = Vector2(-380, 240)
+
+[node name="Tree38" parent="Map/TreesAndBushes" unique_id=300000001 instance=ExtResource("29_tree3")]
+position = Vector2(-700, -300)
+
+[node name="Tree40" parent="Map/TreesAndBushes" unique_id=300000003 instance=ExtResource("28_tree2")]
+position = Vector2(-450, -200)
+
+[node name="Tree41" parent="Map/TreesAndBushes" unique_id=300000004 instance=ExtResource("29_tree3")]
+position = Vector2(-750, 300)
+
+[node name="Tree42" parent="Map/TreesAndBushes" unique_id=300000005 instance=ExtResource("30_tree4")]
+position = Vector2(-700, 450)
+
+[node name="Tree43" parent="Map/TreesAndBushes" unique_id=300000006 instance=ExtResource("28_tree2")]
+position = Vector2(-600, 150)
+
+[node name="Tree44" parent="Map/TreesAndBushes" unique_id=300000007 instance=ExtResource("30_tree4")]
+position = Vector2(-300, 700)
+
+[node name="Tree45" parent="Map/TreesAndBushes" unique_id=300000008 instance=ExtResource("29_tree3")]
+position = Vector2(-50, 750)
+
+[node name="Tree46" parent="Map/TreesAndBushes" unique_id=300000009 instance=ExtResource("28_tree2")]
+position = Vector2(-100, -450)
+
+[node name="Tree47" parent="Map/TreesAndBushes" unique_id=300000010 instance=ExtResource("29_tree3")]
+position = Vector2(200, -400)
+
+[node name="Tree48" parent="Map/TreesAndBushes" unique_id=300000011 instance=ExtResource("30_tree4")]
+position = Vector2(550, -450)
+
+[node name="Tree49" parent="Map/TreesAndBushes" unique_id=300000012 instance=ExtResource("29_tree3")]
+position = Vector2(700, -300)
+
+[node name="Tree50" parent="Map/TreesAndBushes" unique_id=300000013 instance=ExtResource("30_tree4")]
+position = Vector2(900, -200)
+
+[node name="Tree51" parent="Map/TreesAndBushes" unique_id=300000014 instance=ExtResource("28_tree2")]
+position = Vector2(1050, -150)
+
+[node name="Tree58" parent="Map/TreesAndBushes" unique_id=300000021 instance=ExtResource("29_tree3")]
+position = Vector2(300, 700)
+
+[node name="Tree59" parent="Map/TreesAndBushes" unique_id=300000022 instance=ExtResource("30_tree4")]
+position = Vector2(500, 800)
+
+[node name="Tree60" parent="Map/TreesAndBushes" unique_id=300000023 instance=ExtResource("28_tree2")]
+position = Vector2(1200, 800)
+
+[node name="Tree61" parent="Map/TreesAndBushes" unique_id=300000024 instance=ExtResource("29_tree3")]
+position = Vector2(1500, 850)
+
+[node name="Tree62" parent="Map/TreesAndBushes" unique_id=300000025 instance=ExtResource("30_tree4")]
+position = Vector2(1700, 750)
+
+[node name="Bush87" parent="Map/TreesAndBushes" unique_id=300000026 instance=ExtResource("24_xq18t")]
+position = Vector2(-720, -270)
+
+[node name="Bush89" parent="Map/TreesAndBushes" unique_id=300000028 instance=ExtResource("25_ckok1")]
+position = Vector2(-470, -180)
+
+[node name="Bush90" parent="Map/TreesAndBushes" unique_id=300000029 instance=ExtResource("27_wnndm")]
+position = Vector2(-770, 320)
+
+[node name="Bush91" parent="Map/TreesAndBushes" unique_id=300000030 instance=ExtResource("24_xq18t")]
+position = Vector2(-680, 470)
+
+[node name="Bush92" parent="Map/TreesAndBushes" unique_id=300000031 instance=ExtResource("26_2x71e")]
+position = Vector2(-590, 130)
+
+[node name="Bush93" parent="Map/TreesAndBushes" unique_id=300000032 instance=ExtResource("25_ckok1")]
+position = Vector2(-280, 720)
+
+[node name="Bush94" parent="Map/TreesAndBushes" unique_id=300000033 instance=ExtResource("27_wnndm")]
+position = Vector2(-30, 770)
+
+[node name="Bush95" parent="Map/TreesAndBushes" unique_id=300000034 instance=ExtResource("24_xq18t")]
+position = Vector2(-90, -480)
+
+[node name="Bush96" parent="Map/TreesAndBushes" unique_id=300000035 instance=ExtResource("26_2x71e")]
+position = Vector2(220, -380)
+
+[node name="Bush97" parent="Map/TreesAndBushes" unique_id=300000036 instance=ExtResource("25_ckok1")]
+position = Vector2(570, -480)
+
+[node name="Bush98" parent="Map/TreesAndBushes" unique_id=300000037 instance=ExtResource("27_wnndm")]
+position = Vector2(720, -320)
+
+[node name="Bush99" parent="Map/TreesAndBushes" unique_id=300000038 instance=ExtResource("24_xq18t")]
+position = Vector2(920, -180)
+
+[node name="Bush100" parent="Map/TreesAndBushes" unique_id=300000039 instance=ExtResource("26_2x71e")]
+position = Vector2(1080, -130)
+
+[node name="Bush107" parent="Map/TreesAndBushes" unique_id=300000046 instance=ExtResource("24_xq18t")]
+position = Vector2(320, 730)
+
+[node name="Bush108" parent="Map/TreesAndBushes" unique_id=300000047 instance=ExtResource("26_2x71e")]
+position = Vector2(520, 830)
+
+[node name="Bush109" parent="Map/TreesAndBushes" unique_id=300000048 instance=ExtResource("25_ckok1")]
+position = Vector2(1230, 830)
+
+[node name="Bush110" parent="Map/TreesAndBushes" unique_id=300000049 instance=ExtResource("27_wnndm")]
+position = Vector2(1530, 880)
+
+[node name="Bush111" parent="Map/TreesAndBushes" unique_id=300000050 instance=ExtResource("24_xq18t")]
+position = Vector2(1730, 780)
+
+[node name="Rock2G" parent="Map/TreesAndBushes" unique_id=300000051 instance=ExtResource("31_rock1")]
+position = Vector2(-680, -270)
+
+[node name="Rock2H" parent="Map/TreesAndBushes" unique_id=300000052 instance=ExtResource("32_rock2")]
+position = Vector2(-470, -210)
+
+[node name="Rock2I" parent="Map/TreesAndBushes" unique_id=300000053 instance=ExtResource("31_rock1")]
+position = Vector2(-720, 320)
+
+[node name="Rock2J" parent="Map/TreesAndBushes" unique_id=300000054 instance=ExtResource("32_rock2")]
+position = Vector2(-680, 470)
+
+[node name="Rock2K" parent="Map/TreesAndBushes" unique_id=300000055 instance=ExtResource("31_rock1")]
+position = Vector2(-280, 720)
+
+[node name="Rock2L" parent="Map/TreesAndBushes" unique_id=300000056 instance=ExtResource("32_rock2")]
+position = Vector2(-90, -460)
+
+[node name="Rock2M" parent="Map/TreesAndBushes" unique_id=300000057 instance=ExtResource("31_rock1")]
+position = Vector2(220, -390)
+
+[node name="Rock2N" parent="Map/TreesAndBushes" unique_id=300000058 instance=ExtResource("32_rock2")]
+position = Vector2(570, -460)
+
+[node name="Rock2O" parent="Map/TreesAndBushes" unique_id=300000059 instance=ExtResource("31_rock1")]
+position = Vector2(920, -190)
+
+[node name="Rock2Q" parent="Map/TreesAndBushes" unique_id=300000061 instance=ExtResource("31_rock1")]
+position = Vector2(1730, -390)
+
+[node name="Rock2U" parent="Map/TreesAndBushes" unique_id=300000065 instance=ExtResource("31_rock1")]
+position = Vector2(320, 720)
+
+[node name="Rock2V" parent="Map/TreesAndBushes" unique_id=300000066 instance=ExtResource("32_rock2")]
+position = Vector2(520, 820)
+
+[node name="Rock2W" parent="Map/TreesAndBushes" unique_id=300000067 instance=ExtResource("31_rock1")]
+position = Vector2(1230, 820)
+
+[node name="Rock2X" parent="Map/TreesAndBushes" unique_id=300000068 instance=ExtResource("32_rock2")]
+position = Vector2(1530, 880)
+
+[node name="Rock2Y" parent="Map/TreesAndBushes" unique_id=300000069 instance=ExtResource("31_rock1")]
+position = Vector2(1730, 760)
+
+[node name="Rock2Z" parent="Map/TreesAndBushes" unique_id=300000070 instance=ExtResource("32_rock2")]
+position = Vector2(1000, 0)
 
 [node name="WaterRock4" parent="Map" unique_id=1939296760 instance=ExtResource("21_xq18t")]
 position = Vector2(-688, -1451)
