@@ -12,5 +12,5 @@ func apply_effect(caster: Player) -> void:
 	if targets.is_empty():
 		return
 	var target_player: Player = targets.pick_random() as Player
-	var damage := base_damage + caster.strength
+	var damage := base_damage + caster.get_effective_stat("strength")
 	target_player.take_damage(damage, "ability")

@@ -6,11 +6,18 @@ const DEFAULT_DATA: PlayerData = preload("res://scenes/player/default_player.tre
 const DEFAULT_WHIRLWIND: AbilityData = preload("res://scenes/ability/types/whirlwind.tres")
 const LEVEL_DATA: LevelData = preload("res://scenes/player/level_data.tres")
 const MAX_ABILITY_SLOTS := 4
+const UPGRADE_POOL: Array[UpgradeData] = [
+	preload("res://scenes/upgrade/types/max_health.tres"),
+	preload("res://scenes/upgrade/types/strength.tres"),
+	preload("res://scenes/upgrade/types/health_regen.tres"),
+]
 
 signal ability_used(slot_index: int)
 signal ability_cooldown_changed(slot_index: int, remaining: float, total: float)
 signal experience_changed(current_xp: float, xp_required: float)
 signal leveled_up(new_level: int)
+signal upgrade_selection_requested(options: Array[UpgradeData])
+signal upgrade_selection_completed()
 
 var sprite: AnimatedSprite2D
 var player_index: int = 0
@@ -22,6 +29,8 @@ var ability_cooldowns: Array[float] = []
 var experience: float = 0.0
 var level: int = 1
 var _casting_slot: int = -1
+var is_selecting_upgrade: bool = false
+var pending_upgrade_count: int = 0
 
 
 func setup(index: int, color: Color) -> void:
@@ -36,6 +45,10 @@ func setup(index: int, color: Color) -> void:
 
 func _process(delta: float) -> void:
 	super(delta)
+	if InputManager.is_action_just_pressed(player_index, "open_upgrades"):
+		_open_upgrade_menu()
+	if is_selecting_upgrade:
+		return
 	_update_target_list()
 	_handle_auto_target()
 	if InputManager.is_action_just_pressed(player_index, "switch_target"):
@@ -49,7 +62,7 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if is_casting:
+	if is_casting or is_selecting_upgrade:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
@@ -205,11 +218,27 @@ func gain_experience(amount: float) -> void:
 		experience -= LEVEL_DATA.get_xp_required(level)
 		level += 1
 		leveled_up.emit(level)
+		pending_upgrade_count += 1
 	var xp_req := LEVEL_DATA.get_xp_required(level)
 	if xp_req > 0.0:
 		experience_changed.emit(experience, xp_req)
 	else:
 		experience_changed.emit(0.0, 1.0)
+
+
+func _open_upgrade_menu() -> void:
+	if pending_upgrade_count <= 0 or is_selecting_upgrade:
+		return
+	is_selecting_upgrade = true
+	var options := UpgradeData.pick_weighted(UPGRADE_POOL, 3)
+	upgrade_selection_requested.emit(options)
+
+
+func apply_selected_upgrade(upgrade: UpgradeData) -> void:
+	add_upgrade(upgrade)
+	pending_upgrade_count -= 1
+	is_selecting_upgrade = false
+	upgrade_selection_completed.emit()
 
 
 func try_grant_card(ability: AbilityData) -> bool:

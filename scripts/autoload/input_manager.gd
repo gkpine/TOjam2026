@@ -1,7 +1,7 @@
 extends Node
 
 const MOVEMENT_ACTIONS := ["move_up", "move_down", "move_left", "move_right"]
-const BUTTON_ACTIONS := ["switch_target", "ability_1", "ability_2", "ability_3", "ability_4"]
+const BUTTON_ACTIONS := ["switch_target", "ability_1", "ability_2", "ability_3", "ability_4", "open_upgrades"]
 
 const KB_BINDINGS := {
 	"move_up": KEY_W,
@@ -13,6 +13,7 @@ const KB_BINDINGS := {
 	"ability_2": KEY_2,
 	"ability_3": KEY_3,
 	"ability_4": KEY_4,
+	"open_upgrades": KEY_U,
 }
 
 const JOY_BUTTON_BINDINGS := {
@@ -21,6 +22,7 @@ const JOY_BUTTON_BINDINGS := {
 	"ability_2": JOY_BUTTON_Y,
 	"ability_3": JOY_BUTTON_RIGHT_SHOULDER,
 	"ability_4": JOY_BUTTON_LEFT_SHOULDER,
+	"open_upgrades": JOY_BUTTON_DPAD_UP,
 }
 
 const STICK_AXES := {
@@ -49,16 +51,16 @@ func _setup_input_map() -> void:
 				kb_event.keycode = KB_BINDINGS[action_name]
 				InputMap.action_add_event(full_action, kb_event)
 
-			if action_name in STICK_AXES:
+			if player_idx > 0 and action_name in STICK_AXES:
 				var joy_event := InputEventJoypadMotion.new()
-				joy_event.device = player_idx
+				joy_event.device = player_idx - 1
 				joy_event.axis = STICK_AXES[action_name][0]
 				joy_event.axis_value = STICK_AXES[action_name][1]
 				InputMap.action_add_event(full_action, joy_event)
 
-			if action_name in JOY_BUTTON_BINDINGS:
+			if player_idx > 0 and action_name in JOY_BUTTON_BINDINGS:
 				var btn_event := InputEventJoypadButton.new()
-				btn_event.device = player_idx
+				btn_event.device = player_idx - 1
 				btn_event.button_index = JOY_BUTTON_BINDINGS[action_name]
 				InputMap.action_add_event(full_action, btn_event)
 

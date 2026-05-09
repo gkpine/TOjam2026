@@ -7,7 +7,7 @@ extends AbilityData
 
 
 func execute(caster: Player) -> bool:
-	var damage := base_damage + caster.strength * strength_multiplier
+	var damage := base_damage + caster.get_effective_stat("strength") * strength_multiplier
 	var world := caster.get_parent() as Node2D
 	if world == null:
 		return false

@@ -27,6 +27,7 @@ var _variant: Variant = Variant.BLUE
 var _pressed: bool = false
 var _desaturated: bool = false
 var _pieces: Array[TextureRect] = []
+var _icon_rect: TextureRect
 var _cooldown_label: Label
 var _shader_material: ShaderMaterial
 
@@ -41,6 +42,7 @@ func setup(variant: Variant, slot_width: float, slot_height: float) -> void:
 
 	_setup_shader()
 	_build_pieces(slot_width, slot_height)
+	_build_icon(slot_width, slot_height)
 	_build_cooldown_label(slot_width, slot_height)
 
 
@@ -102,6 +104,22 @@ func _build_cooldown_label(slot_width: float, slot_height: float) -> void:
 	_cooldown_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	_cooldown_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_cooldown_label)
+
+
+func _build_icon(slot_width: float, slot_height: float) -> void:
+	_icon_rect = TextureRect.new()
+	var icon_size := 64.0
+	_icon_rect.position = Vector2((slot_width - icon_size) / 2.0, (slot_height - icon_size) / 2.0)
+	_icon_rect.size = Vector2(icon_size, icon_size)
+	_icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_icon_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_icon_rect.use_parent_material = true
+	add_child(_icon_rect)
+
+
+func set_icon(texture: Texture2D) -> void:
+	_icon_rect.texture = texture
 
 
 func _get_texture() -> Texture2D:

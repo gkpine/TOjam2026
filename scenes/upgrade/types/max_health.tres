@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3]
+
+[ext_resource type="Script" path="res://scenes/upgrade/upgrade_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+upgrade_id = &"max_health"
+upgrade_name = "Max Health"
+description = "Increases maximum health by 20."
+stat_modifiers = {
+"max_health": 20.0
+}
+relative_probability = 1.0
