@@ -26,37 +26,37 @@ func _draw() -> void:
 		for col in range(-cols, cols):
 			if col == -cols and row == -rows:
 				# Top left corner
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(5, 0))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(5, 0))
 			elif col == cols - 2 and row == rows - 1:
 				# Bottom right corner grass
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(7, 2))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(7, 2))
 			elif col == cols - 2 and row == -rows:
 				# Bottom left corner grass
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(5, 2))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(5, 2))
 			elif col == cols - 1 and row == -rows:
 				# Bottom left corner rocks
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(5, 4))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(5, 4))
 			elif col == cols - 1 and row == rows - 1:
 				# Bottom right corner rocks
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(7, 4))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(7, 4))
 			elif row == -rows:
 				# Left edge
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(5, 1))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(5, 1))
 			elif row == rows - 1 and col == -cols:
 				# Top right corner
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(7, 0))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(7, 0))
 			elif row == rows - 1:
 				# Right edge
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(7, 1))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(7, 1))
 			elif col == cols - 2:
 				# Bottom edge
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(6, 2))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(6, 2))
 			elif col == cols - 1:
 				# Bottom rocks
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(6, 4))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(6, 4))
 			elif col == -cols:
 				# Top edge
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(6, 0))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(6, 0))
 			else:
 				# Middle grass tiles
-				$Map/TileMapLayer.set_cell(Vector2(row, col), 1, Vector2(6, 1))
+				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(6, 1))
