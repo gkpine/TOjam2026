@@ -21,6 +21,7 @@ var abilities: Array[AbilityData] = []
 var ability_cooldowns: Array[float] = []
 var experience: float = 0.0
 var level: int = 1
+var _casting_slot: int = -1
 
 
 func setup(index: int, color: Color) -> void:
@@ -48,6 +49,10 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(_delta: float) -> void:
+	if is_casting:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		return
 	var direction := InputManager.get_movement_vector(player_index)
 	velocity = direction * movement_speed
 	move_and_slide()
@@ -169,15 +174,24 @@ func _try_use_ability(slot: int) -> void:
 		return
 	if ability_cooldowns[slot] > 0.0:
 		return
-	if abilities[slot].execute(self):
-		ability_cooldowns[slot] = abilities[slot].cooldown
+	if is_casting:
+		return
+	var ability := abilities[slot]
+	if ability.cast_time > 0.0:
+		_casting_slot = slot
+		start_cast(ability)
 		ability_used.emit(slot)
-		if abilities[slot].animation != &"":
-			play_attack_animation(abilities[slot].animation)
+	elif ability.execute(self):
+		ability_cooldowns[slot] = ability.cooldown
+		ability_used.emit(slot)
+		if ability.animation != &"":
+			play_attack_animation(ability.animation)
 
 
 func _tick_ability_cooldowns(delta: float) -> void:
 	for i in range(ability_cooldowns.size()):
+		if abilities[i] == null:
+			continue
 		if ability_cooldowns[i] > 0.0:
 			ability_cooldowns[i] = maxf(ability_cooldowns[i] - delta, 0.0)
 			ability_cooldown_changed.emit(i, ability_cooldowns[i], abilities[i].cooldown)
@@ -196,6 +210,26 @@ func gain_experience(amount: float) -> void:
 		experience_changed.emit(experience, xp_req)
 	else:
 		experience_changed.emit(0.0, 1.0)
+
+
+func try_grant_card(ability: AbilityData) -> bool:
+	for slot in [2, 3]:
+		if slot >= abilities.size() or abilities[slot] == null:
+			equip_ability(ability, slot)
+			return true
+	return false
+
+
+func _on_cast_finished() -> void:
+	var slot := _casting_slot
+	_casting_slot = -1
+	if slot < 0 or slot >= abilities.size() or abilities[slot] == null:
+		return
+	var ability := abilities[slot]
+	if ability.is_card:
+		ability.num_charges -= 1
+		if ability.num_charges <= 0:
+			abilities[slot] = null
 
 
 func die() -> void:
