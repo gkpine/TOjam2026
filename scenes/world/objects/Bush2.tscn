@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://l0pqw8x7rq1n"]
+
+[ext_resource type="Texture2D" uid="uid://drdqtk5hxuash" path="res://Tiny Swords (Free Pack)/Terrain/Decorations/Bushes/Bushe2.png" id="1_w5j4c"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2mkfd"]
+atlas = ExtResource("1_w5j4c")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_juj4t"]
+atlas = ExtResource("1_w5j4c")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r2bkd"]
+atlas = ExtResource("1_w5j4c")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nta7g"]
+atlas = ExtResource("1_w5j4c")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tl4c4"]
+atlas = ExtResource("1_w5j4c")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5akws"]
+atlas = ExtResource("1_w5j4c")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qoo4s"]
+atlas = ExtResource("1_w5j4c")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hqup7"]
+atlas = ExtResource("1_w5j4c")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ap737"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2mkfd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_juj4t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r2bkd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nta7g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tl4c4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5akws")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qoo4s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hqup7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[node name="Bush2" type="Node2D" unique_id=1172645497]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=613821261]
+sprite_frames = SubResource("SpriteFrames_ap737")
+autoplay = "default"

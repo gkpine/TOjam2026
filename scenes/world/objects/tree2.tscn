@@ -1,37 +1,37 @@
-[gd_scene format=3 uid="uid://b5mekofi8bd0k"]
+[gd_scene format=3 uid="uid://c1f7wllud4dxa"]
 
-[ext_resource type="Texture2D" uid="uid://dq3rhfdem5hy3" path="res://Tiny Swords (Free Pack)/Terrain/Resources/Wood/Trees/Tree2.png" id="1_rvqxf"]
+[ext_resource type="Texture2D" uid="uid://co3sdoq0fr2cx" path="res://Tiny Swords (Free Pack)/Terrain/Resources/Wood/Trees/Tree1.png" id="1_bopn0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1cpa3"]
-atlas = ExtResource("1_rvqxf")
+atlas = ExtResource("1_bopn0")
 region = Rect2(0, 0, 192, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_q6b82"]
-atlas = ExtResource("1_rvqxf")
+atlas = ExtResource("1_bopn0")
 region = Rect2(192, 0, 192, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_r0bsk"]
-atlas = ExtResource("1_rvqxf")
+atlas = ExtResource("1_bopn0")
 region = Rect2(384, 0, 192, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vnbrx"]
-atlas = ExtResource("1_rvqxf")
+atlas = ExtResource("1_bopn0")
 region = Rect2(576, 0, 192, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cndlc"]
-atlas = ExtResource("1_rvqxf")
+atlas = ExtResource("1_bopn0")
 region = Rect2(768, 0, 192, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2qcni"]
-atlas = ExtResource("1_rvqxf")
+atlas = ExtResource("1_bopn0")
 region = Rect2(960, 0, 192, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5ri7a"]
-atlas = ExtResource("1_rvqxf")
+atlas = ExtResource("1_bopn0")
 region = Rect2(1152, 0, 192, 256)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_bim5s"]
-atlas = ExtResource("1_rvqxf")
+atlas = ExtResource("1_bopn0")
 region = Rect2(1344, 0, 192, 256)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_xx2gc"]
@@ -62,7 +62,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_bim5s")
 }],
 "loop": true,
-"name": &"new_animation",
+"name": &"default",
 "speed": 6.0
 }]
 
@@ -75,8 +75,9 @@ z_index = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=726601672]
 sprite_frames = SubResource("SpriteFrames_xx2gc")
-animation = &"new_animation"
-autoplay = "new_animation"
+autoplay = "default"
+frame = 4
+frame_progress = 0.6120556
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1905941703]
 

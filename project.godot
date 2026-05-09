@@ -43,3 +43,4 @@ theme/custom="res://assets/theme/default_theme.tres"
 
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.2784314, 0.67058825, 0.6627451, 1)
