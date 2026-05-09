@@ -58,7 +58,7 @@ func die() -> void:
 	queue_free()
 
 
-func play_attack_animation() -> void:
+func play_attack_animation(_anim_name: StringName = &"attack") -> void:
 	pass
 
 

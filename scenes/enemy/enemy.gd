@@ -86,9 +86,9 @@ func _build_sprite_frames() -> SpriteFrames:
 	return frames
 
 
-func play_attack_animation() -> void:
+func play_attack_animation(anim_name: StringName = &"attack") -> void:
 	is_attacking = true
-	sprite.play("attack")
+	sprite.play(anim_name)
 	await sprite.animation_finished
 	is_attacking = false
 
