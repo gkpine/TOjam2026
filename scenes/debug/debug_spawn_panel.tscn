@@ -1,0 +1,7 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scenes/debug/debug_spawn_panel.gd" id="1_panel"]
+
+[node name="DebugSpawnPanel" type="CanvasLayer"]
+layer = 11
+script = ExtResource("1_panel")

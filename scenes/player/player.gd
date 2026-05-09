@@ -22,6 +22,7 @@ var ability_cooldowns: Array[float] = []
 var experience: float = 0.0
 var level: int = 1
 var _casting_slot: int = -1
+var god_mode: bool = false  # debug panel toggles this; bypasses take_damage entirely
 
 
 func setup(index: int, color: Color) -> void:
@@ -230,6 +231,12 @@ func _on_cast_finished() -> void:
 		ability.num_charges -= 1
 		if ability.num_charges <= 0:
 			abilities[slot] = null
+
+
+func take_damage(amount: float, damage_type: String = "auto_attack") -> void:
+	if god_mode:
+		return
+	super.take_damage(amount, damage_type)
 
 
 func die() -> void:
