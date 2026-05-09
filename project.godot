@@ -44,3 +44,4 @@ theme/custom_font="res://assets/fonts/VT323-Regular.ttf"
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.2784314, 0.67058825, 0.6627451, 1)
