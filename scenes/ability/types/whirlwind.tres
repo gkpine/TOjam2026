@@ -4,5 +4,6 @@
 
 [resource]
 script = ExtResource("1")
+ability_id = &"whirlwind"
 ability_name = "Whirlwind"
 animation = &"attack_2"

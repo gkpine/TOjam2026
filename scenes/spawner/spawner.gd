@@ -1,6 +1,8 @@
 extends Node2D
 class_name Spawner
 
+const SMITE_CARD: AbilityData = preload("res://scenes/ability/types/smite.tres")
+
 @export var enemy_scene: PackedScene
 @export var enemy_types: Array[EnemyData] = []
 @export var spawn_radius: float = 300.0
@@ -45,4 +47,6 @@ func _spawn_enemy() -> void:
 	enemy.died.connect(func(_character: Character):
 		if world.player and is_instance_valid(world.player):
 			world.player.gain_experience(exp_reward)
+			var card := SMITE_CARD.duplicate() as AbilityData
+			world.player.try_grant_card(card)
 	)

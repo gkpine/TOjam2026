@@ -53,6 +53,8 @@ func _process(_delta: float) -> void:
 
 		_slots[i].set_pressed(button_held or on_cooldown or not has_ability)
 		_slots[i].set_desaturated(on_cooldown or not has_ability)
+		if not on_cooldown:
+			_update_slot_label(i)
 
 
 func _on_cooldown_changed(slot: int, remaining: float, _total: float) -> void:
@@ -60,5 +62,13 @@ func _on_cooldown_changed(slot: int, remaining: float, _total: float) -> void:
 		return
 	if remaining > 0.0:
 		_slots[slot].set_cooldown_text("%.1f" % remaining)
+	else:
+		_update_slot_label(slot)
+
+
+func _update_slot_label(slot: int) -> void:
+	var has_ability := slot < _player.abilities.size() and _player.abilities[slot] != null
+	if has_ability and _player.abilities[slot].is_card:
+		_slots[slot].set_cooldown_text(str(_player.abilities[slot].num_charges))
 	else:
 		_slots[slot].set_cooldown_text("")

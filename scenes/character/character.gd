@@ -22,14 +22,24 @@ var target: Character = null
 var _auto_attack_cooldown: float = 0.0
 var floating_number_offset_y: float = -40.0
 var is_attacking: bool = false
+var is_casting: bool = false
 var _combat_timer: float = 5.0
 var _movement_timer: float = 1.0
 var _regen_accumulator: float = 0.0
+var _cast_timer: float = 0.0
+var _cast_duration: float = 0.0
+var _casting_ability: Resource = null
+var _cast_bar: StatusBar = null
+var _cast_bar_offset_y: float = 20.0
+
+const CAST_BAR_BASE := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png")
+const CAST_BAR_FILL := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png")
 
 
 func _process(delta: float) -> void:
 	_process_auto_attack(delta)
 	_process_health_regen(delta)
+	_process_casting(delta)
 
 
 func _process_auto_attack(delta: float) -> void:
@@ -41,7 +51,7 @@ func _process_auto_attack(delta: float) -> void:
 		target = null
 		return
 	var dist := global_position.distance_to(target.global_position)
-	if dist <= auto_attack_range_px and _auto_attack_cooldown <= 0.0 and not is_attacking:
+	if dist <= auto_attack_range_px and _auto_attack_cooldown <= 0.0 and not is_attacking and not is_casting:
 		_auto_attack_cooldown = 1.0 / auto_attack_per_second
 		var damage := base_damage + strength
 		play_attack_animation()
@@ -103,6 +113,53 @@ func die() -> void:
 
 
 func play_attack_animation(_anim_name: StringName = &"attack") -> void:
+	pass
+
+
+func start_cast(ability: Resource) -> void:
+	is_casting = true
+	_cast_timer = 0.0
+	_cast_duration = ability.cast_time
+	_casting_ability = ability
+
+	_cast_bar = StatusBar.new()
+	add_child(_cast_bar)
+	_cast_bar.setup(CAST_BAR_BASE, CAST_BAR_FILL, 1)
+	_cast_bar.set_fill_color(Color(1.0, 0.85, 0.0))
+	_cast_bar.position.x = -_cast_bar.get_bar_width() / 2.0
+	_cast_bar.position.y = _cast_bar_offset_y
+	_cast_bar.update_value(0.0, _cast_duration)
+
+
+func _process_casting(delta: float) -> void:
+	if not is_casting:
+		return
+	_cast_timer += delta
+	if _cast_bar:
+		_cast_bar.update_value(_cast_timer, _cast_duration)
+	if _cast_timer >= _cast_duration:
+		_casting_ability.apply_effect(self)
+		_finish_cast()
+
+
+func _finish_cast() -> void:
+	is_casting = false
+	_casting_ability = null
+	if _cast_bar:
+		_cast_bar.queue_free()
+		_cast_bar = null
+	_on_cast_finished()
+
+
+func cancel_cast() -> void:
+	is_casting = false
+	_casting_ability = null
+	if _cast_bar:
+		_cast_bar.queue_free()
+		_cast_bar = null
+
+
+func _on_cast_finished() -> void:
 	pass
 
 
