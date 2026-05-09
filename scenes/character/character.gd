@@ -14,6 +14,7 @@ var auto_attack_delay: float = 0.2
 var movement_speed: float = 200.0
 var target_range_px: float = 200.0
 var auto_attack_range_px: float = 100.0
+var auto_attack_enabled: bool = true
 var base_health_regen_per_second: float = 0.0
 var in_combat_health_regen_multiplier: float = 0.0
 var moving_hp_regen_multiplier: float = 0.25
@@ -28,9 +29,10 @@ var _movement_timer: float = 1.0
 var _regen_accumulator: float = 0.0
 var _cast_timer: float = 0.0
 var _cast_duration: float = 0.0
-var _casting_ability: Resource = null
+var _casting_ability: AbilityData = null
 var _cast_bar: StatusBar = null
 var _cast_bar_offset_y: float = 20.0
+var _cast_indicator: Node2D = null
 
 const CAST_BAR_BASE := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png")
 const CAST_BAR_FILL := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png")
@@ -43,6 +45,8 @@ func _process(delta: float) -> void:
 
 
 func _process_auto_attack(delta: float) -> void:
+	if not auto_attack_enabled:
+		return
 	if _auto_attack_cooldown > 0.0:
 		_auto_attack_cooldown -= delta
 	if target == null:
@@ -108,6 +112,8 @@ func heal(amount: float, heal_type: String = "heal") -> void:
 
 
 func die() -> void:
+	if is_casting:
+		cancel_cast()
 	died.emit(self)
 	queue_free()
 
@@ -116,19 +122,41 @@ func play_attack_animation(_anim_name: StringName = &"attack") -> void:
 	pass
 
 
-func start_cast(ability: Resource) -> void:
+func start_cast(ability: AbilityData) -> void:
+	if ability == null:
+		return
+
+	# Instant abilities skip the cast UI entirely (cast_time = 0 would also
+	# trigger a divide-by-zero in StatusBar.update_value).
+	if ability.cast_time <= 0.0:
+		ability.apply_effect(self)
+		return
+
 	is_casting = true
 	_cast_timer = 0.0
 	_cast_duration = ability.cast_time
 	_casting_ability = ability
 
+	# Cast UI nodes are added to the caster's parent (the world) rather than
+	# to the caster itself, and their visual content (StatusBar.setup,
+	# AoeIndicator.setup) MUST run before add_child or they won't render
+	# reliably in this project's setup.
+	var canvas_parent: Node = get_parent()
+	if canvas_parent == null:
+		canvas_parent = self
+
 	_cast_bar = StatusBar.new()
-	add_child(_cast_bar)
 	_cast_bar.setup(CAST_BAR_BASE, CAST_BAR_FILL, 1)
 	_cast_bar.set_fill_color(Color(1.0, 0.85, 0.0))
-	_cast_bar.position.x = -_cast_bar.get_bar_width() / 2.0
-	_cast_bar.position.y = _cast_bar_offset_y
+	canvas_parent.add_child(_cast_bar)
+	_cast_bar.position = global_position + Vector2(-_cast_bar.get_bar_width() / 2.0, _cast_bar_offset_y)
 	_cast_bar.update_value(0.0, _cast_duration)
+
+	var indicator := ability.make_cast_indicator(self)
+	if indicator:
+		canvas_parent.add_child(indicator)
+		indicator.global_position = global_position
+		_cast_indicator = indicator
 
 
 func _process_casting(delta: float) -> void:
@@ -148,6 +176,9 @@ func _finish_cast() -> void:
 	if _cast_bar:
 		_cast_bar.queue_free()
 		_cast_bar = null
+	if _cast_indicator:
+		_cast_indicator.queue_free()
+		_cast_indicator = null
 	_on_cast_finished()
 
 
@@ -157,6 +188,9 @@ func cancel_cast() -> void:
 	if _cast_bar:
 		_cast_bar.queue_free()
 		_cast_bar = null
+	if _cast_indicator:
+		_cast_indicator.queue_free()
+		_cast_indicator = null
 
 
 func _on_cast_finished() -> void:

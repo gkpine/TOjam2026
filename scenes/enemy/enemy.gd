@@ -1,10 +1,13 @@
 extends Character
 class_name Enemy
 
+const DEFAULT_BEHAVIOR := preload("res://scenes/enemy/behaviors/chaser.tres")
+
 @export var enemy_data: EnemyData
 
 var sprite: AnimatedSprite2D
-var stop_distance: float = 60.0
+var behavior: EnemyBehavior
+var behavior_state: Dictionary = {}  # per-enemy scratch space for the behavior
 var _health_bar: StatusBar
 var _hit_scale_tween: Tween
 var _hit_flash_tween: Tween
@@ -13,12 +16,13 @@ var _hit_flash_tween: Tween
 func setup(data: EnemyData) -> void:
 	enemy_data = data
 	_apply_stats()
+	behavior = enemy_data.behavior if enemy_data.behavior else DEFAULT_BEHAVIOR
 	sprite = $AnimatedSprite2D
 	sprite.sprite_frames = _build_sprite_frames()
 	sprite.play("idle")
 	$CollisionShape2D.shape = CircleShape2D.new()
 	$CollisionShape2D.shape.radius = enemy_data.collision_radius
-	sprite.offset.y = enemy_data.collision_radius - (enemy_data.visible_sprite_height / 6.0);
+	sprite.offset.y = enemy_data.collision_radius - (enemy_data.visible_sprite_height / 6.0)
 	var reticle := preload("res://scenes/combat/targeting_reticle.tscn").instantiate()
 	add_child(reticle)
 	reticle.setup(enemy_data.collision_radius)
@@ -55,27 +59,30 @@ func _acquire_target() -> void:
 			target = player
 
 
-func _physics_process(_delta: float) -> void:
-	if target == null or not is_instance_valid(target):
-		target = null
+func _physics_process(delta: float) -> void:
+	if is_casting:
 		velocity = Vector2.ZERO
-		if sprite and not is_attacking and sprite.animation != &"idle":
-			sprite.play("idle")
+		_update_animation()
+		move_and_slide()
 		return
+	velocity = behavior.compute_velocity(self, delta) if behavior else Vector2.ZERO
+	_update_animation()
+	move_and_slide()
+	if behavior:
+		for i in range(get_slide_collision_count()):
+			behavior.on_collision(self, get_slide_collision(i))
 
-	var dist := global_position.distance_to(target.global_position)
-	if dist <= stop_distance:
-		velocity = Vector2.ZERO
-		if sprite and not is_attacking and sprite.animation != &"idle":
+
+func _update_animation() -> void:
+	if not sprite or is_attacking:
+		return
+	if velocity == Vector2.ZERO:
+		if sprite.animation != &"idle":
 			sprite.play("idle")
 	else:
-		var direction := (target.global_position - global_position).normalized()
-		velocity = direction * movement_speed
-		if sprite and not is_attacking:
-			if sprite.animation != &"run":
-				sprite.play("run")
-			sprite.flip_h = velocity.x < 0
-	move_and_slide()
+		if sprite.animation != &"run":
+			sprite.play("run")
+		sprite.flip_h = velocity.x < 0
 
 
 func _apply_stats() -> void:
@@ -83,6 +90,7 @@ func _apply_stats() -> void:
 	max_health = enemy_data.max_health if enemy_data.max_health > 0.0 else enemy_data.health
 	base_damage = enemy_data.base_damage
 	strength = enemy_data.strength
+	auto_attack_enabled = enemy_data.auto_attack_enabled
 	auto_attack_per_second = enemy_data.auto_attack_per_second
 	auto_attack_delay = enemy_data.auto_attack_delay
 	movement_speed = enemy_data.movement_speed

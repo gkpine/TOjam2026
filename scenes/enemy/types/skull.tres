@@ -1,10 +1,16 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://djmr7dedscd5a"]
 
 [ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="1"]
+[ext_resource type="Script" uid="uid://cvajlxjkqr3w0" path="res://scenes/enemy/behaviors/chaser_behavior.gd" id="1_dwtou"]
+
+[sub_resource type="Resource" id="Resource_uwola"]
+script = ExtResource("1_dwtou")
+metadata/_custom_type_script = "uid://cvajlxjkqr3w0"
 
 [resource]
 script = ExtResource("1")
 enemy_name = "skull"
+behavior = SubResource("Resource_uwola")
 health = 25.0
 base_damage = 4.0
 auto_attack_per_second = 1.0

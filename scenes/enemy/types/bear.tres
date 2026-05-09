@@ -1,10 +1,12 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://6f03eqtoyha"]
 
 [ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="1"]
+[ext_resource type="Resource" path="res://scenes/enemy/behaviors/charger.tres" id="2_charger"]
 
 [resource]
 script = ExtResource("1")
 enemy_name = "bear"
+behavior = ExtResource("2_charger")
 frame_size = 256
 visible_sprite_height = 230
 attack_frames = 9

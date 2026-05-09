@@ -15,5 +15,15 @@ func execute(caster: Player) -> bool:
 	return false
 
 
-func apply_effect(caster: Player) -> void:
+# Called by Character._process_casting when the cast bar fills. Receives a
+# Character (Player or Enemy) — subclasses that only make sense for one or
+# the other should type-check at the top.
+func apply_effect(caster: Character) -> void:
 	pass
+
+
+# Optional override: return a Node2D to be parented to the caster for the
+# duration of the cast (e.g. an AoE telegraph circle). Returned automatically
+# when the cast ends, by Character._finish_cast / cancel_cast.
+func make_cast_indicator(_caster: Character) -> Node2D:
+	return null

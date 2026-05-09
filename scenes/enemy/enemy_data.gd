@@ -2,6 +2,7 @@ class_name EnemyData
 extends Resource
 
 @export var enemy_name: String
+@export var behavior: EnemyBehavior  # null → enemy.gd falls back to the chaser
 @export var frame_size: int = 192
 @export var visible_sprite_height: int = 173
 @export var idle_frames: int = 8
@@ -12,6 +13,7 @@ extends Resource
 @export var max_health: float = 0.0
 @export var base_damage: float = 5.0
 @export var strength: float = 0.0
+@export var auto_attack_enabled: bool = true
 @export var auto_attack_per_second: float = 0.8
 @export var auto_attack_delay: float = 0.3
 @export var movement_speed: float = 120.0
