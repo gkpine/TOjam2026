@@ -16,7 +16,7 @@ var _level_label: Label
 
 func setup(player: Player) -> void:
 	_player = player
-	health_bar.update_health(player.health, player.max_health)
+	health_bar.update_health(player.health, player.get_effective_stat("max_health"))
 	action_bar.setup(player)
 	player.health_changed.connect(_on_player_health_changed)
 	player.died.connect(_on_player_died)
@@ -52,6 +52,10 @@ func setup(player: Player) -> void:
 	_level_label.offset_bottom = -MARGIN
 	add_child(_level_label)
 
+	var upgrade_ui := UpgradeOptionsController.new()
+	add_child(upgrade_ui)
+	upgrade_ui.setup(player)
+
 	player.experience_changed.connect(_on_player_experience_changed)
 	player.leveled_up.connect(_on_player_leveled_up)
 
@@ -67,7 +71,7 @@ func _on_player_health_changed(amount: int, _world_pos: Vector2, change_type: St
 		return
 	var is_heal := amount > 0
 	health_bar.spawn_floating_number(absi(amount), is_heal, change_type)
-	health_bar.update_health(_player.health, _player.max_health)
+	health_bar.update_health(_player.health, _player.get_effective_stat("max_health"))
 
 
 func _on_player_experience_changed(current_xp: float, xp_required: float) -> void:
@@ -80,5 +84,5 @@ func _on_player_leveled_up(new_level: int) -> void:
 
 func _on_player_died(_character: Character) -> void:
 	if _player:
-		health_bar.update_health(0.0, _player.max_health)
+		health_bar.update_health(0.0, _player.get_effective_stat("max_health"))
 	_player = null

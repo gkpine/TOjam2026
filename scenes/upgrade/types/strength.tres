@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://csrbg1b6jym6u"]
+
+[ext_resource type="Script" uid="uid://b4wrw138n8nvv" path="res://scenes/upgrade/upgrade_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+upgrade_id = &"strength"
+upgrade_name = "Strength"
+description = "Increases strength by 5."
+stat_modifiers = {
+"strength": 5.0
+}

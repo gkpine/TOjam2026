@@ -33,6 +33,10 @@ func _connect_character(character: Character) -> void:
 	var health_callback := _on_health_changed.bind(character)
 	if not character.health_changed.is_connected(health_callback):
 		character.health_changed.connect(health_callback)
+	if character is Player:
+		var xp_callback := _on_experience_gained.bind(character)
+		if not character.experience_gained.is_connected(xp_callback):
+			character.experience_gained.connect(xp_callback)
 
 
 func _on_damage_taken(amount: int, pos: Vector2, damage_type: String, character: Character) -> void:
@@ -54,6 +58,15 @@ func _on_health_changed(amount: int, pos: Vector2, _change_type: String, charact
 	var number := _number_scene.instantiate()
 	number.amount = amount
 	number.is_heal = true
+	number.anim_config = _build_anim_config()
+	number.global_position = pos
+	add_child(number)
+
+
+func _on_experience_gained(amount: int, pos: Vector2, _character: Character) -> void:
+	var number := _number_scene.instantiate()
+	number.amount = amount
+	number.is_xp = true
 	number.anim_config = _build_anim_config()
 	number.global_position = pos
 	add_child(number)

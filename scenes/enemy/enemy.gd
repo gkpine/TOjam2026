@@ -144,7 +144,7 @@ func _play_hit_reaction() -> void:
 
 func _on_health_changed(_amount: int, _world_pos: Vector2, _change_type: String) -> void:
 	if _health_bar and is_instance_valid(_health_bar):
-		_health_bar.update_value(health, max_health)
+		_health_bar.update_value(health, get_effective_stat("max_health"))
 
 
 func _add_animation(frames: SpriteFrames, anim_name: String, sheet: Texture2D, frame_count: int, looping: bool = true) -> void:

@@ -17,6 +17,9 @@ var auto_attack_range_px: float = 100.0
 var base_health_regen_per_second: float = 0.0
 var in_combat_health_regen_multiplier: float = 0.0
 var moving_hp_regen_multiplier: float = 0.25
+var damage_reduction_percent: float = 0.0
+
+var upgrades: Array = []
 
 var target: Character = null
 var _auto_attack_cooldown: float = 0.0
@@ -36,6 +39,20 @@ const CAST_BAR_BASE := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Ele
 const CAST_BAR_FILL := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png")
 
 
+func get_effective_stat(stat_name: String) -> float:
+	var value: float = get(stat_name)
+	for upgrade in upgrades:
+		if upgrade.stat_modifiers.has(stat_name):
+			value += upgrade.stat_modifiers[stat_name]
+	return value
+
+
+func add_upgrade(upgrade: UpgradeData) -> void:
+	upgrades.append(upgrade)
+	if upgrade.stat_modifiers.has("max_health"):
+		heal(upgrade.stat_modifiers["max_health"], "upgrade")
+
+
 func _process(delta: float) -> void:
 	_process_auto_attack(delta)
 	_process_health_regen(delta)
@@ -53,7 +70,7 @@ func _process_auto_attack(delta: float) -> void:
 	var dist := global_position.distance_to(target.global_position)
 	if dist <= auto_attack_range_px and _auto_attack_cooldown <= 0.0 and not is_attacking and not is_casting:
 		_auto_attack_cooldown = 1.0 / auto_attack_per_second
-		var damage := base_damage + strength
+		var damage := get_effective_stat("base_damage") + get_effective_stat("strength")
 		play_attack_animation()
 		_apply_delayed_damage(target, damage, auto_attack_delay)
 
@@ -70,7 +87,7 @@ func _process_health_regen(delta: float) -> void:
 	if velocity != Vector2.ZERO:
 		_movement_timer = 0.0
 
-	if base_health_regen_per_second <= 0.0 or health >= max_health:
+	if base_health_regen_per_second <= 0.0 or health >= get_effective_stat("max_health"):
 		_regen_accumulator = 0.0
 		return
 
@@ -92,15 +109,16 @@ func _process_health_regen(delta: float) -> void:
 
 func take_damage(amount: float, damage_type: String = "auto_attack") -> void:
 	_combat_timer = 0.0
-	health -= amount
-	damage_taken.emit(int(amount), _get_floating_number_position(), damage_type)
-	health_changed.emit(-int(amount), _get_floating_number_position(), damage_type)
+	var reduced := amount * (1.0 - damage_reduction_percent / 100.0)
+	health -= reduced
+	damage_taken.emit(int(reduced), _get_floating_number_position(), damage_type)
+	health_changed.emit(-int(reduced), _get_floating_number_position(), damage_type)
 	if health <= 0.0:
 		die()
 
 
 func heal(amount: float, heal_type: String = "heal") -> void:
-	var actual := minf(amount, max_health - health)
+	var actual := minf(amount, get_effective_stat("max_health") - health)
 	if actual <= 0.0:
 		return
 	health += actual
