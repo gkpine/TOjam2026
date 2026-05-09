@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://dhsf35g2kkbdb"]
 
 [ext_resource type="Script" uid="uid://bpspx764as28n" path="res://scenes/world/world.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://b5mekofi8bd0k" path="res://scenes/world/objects/tree.tscn" id="2_bt7bg"]
 [ext_resource type="Texture2D" uid="uid://dyoc5aut25ddh" path="res://Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color1.png" id="2_sl2e5"]
 [ext_resource type="PackedScene" path="res://scenes/spawner/spawner.tscn" id="3_spawner"]
 [ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="4_71ii3"]
@@ -152,6 +153,7 @@ sources/1 = SubResource("TileSetAtlasSource_1fp7r")
 
 [node name="World" type="Node2D" unique_id=1063674193]
 script = ExtResource("1_script")
+TREE_SCENE = ExtResource("2_bt7bg")
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=75646214]
 

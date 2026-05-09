@@ -1,6 +1,8 @@
 extends Node2D
 
 @export var WORLD_SIZE := 1000.0
+@export var TREE_SCENE: PackedScene
+
 const TILE_SIZE := 64.0
 const COLOR_A := Color(0.15, 0.15, 0.2)
 const COLOR_B := Color(0.2, 0.2, 0.25)
@@ -8,6 +10,10 @@ const COLOR_B := Color(0.2, 0.2, 0.25)
 var world_id: int = 0
 var player: Player = null
 
+func spawn_tree(pos: Vector2) -> void:
+	var tree = TREE_SCENE.instantiate()
+	tree.global_position = pos
+	add_child(tree)
 
 func setup(world_index: int, player_scene: PackedScene, player_color: Color) -> void:
 	world_id = world_index
@@ -69,3 +75,8 @@ func _draw() -> void:
 			else:
 				# Middle grass tiles
 				$Map/GroundTileMapLayer.set_cell(Vector2(row, col), 1, Vector2(6, 1))
+				
+			var world_pos = $Map/GroundTileMapLayer.map_to_local(Vector2i(col, row))
+			if col == 1 and row == 1:
+				spawn_tree(world_pos)
+			
