@@ -6,6 +6,8 @@ extends Node2D
 const TILE_SIZE := 64.0
 const COLOR_A := Color(0.15, 0.15, 0.2)
 const COLOR_B := Color(0.2, 0.2, 0.25)
+const ENEMY_SCENE := preload("res://scenes/enemy/enemy.tscn")
+const DEBUG_SPAWN_PANEL_SCENE := preload("res://scenes/debug/debug_spawn_panel.tscn")
 
 var world_id: int = 0
 var player: Player = null
@@ -14,6 +16,14 @@ func spawn_tree(pos: Vector2) -> void:
 	var tree = TREE_SCENE.instantiate()
 	tree.global_position = pos
 	add_child(tree)
+
+
+func spawn_enemy_at(data: EnemyData, world_position: Vector2) -> void:
+	# One-shot variant of Spawner._spawn_enemy() used by the debug panel.
+	var enemy := ENEMY_SCENE.instantiate()
+	enemy.setup(data)
+	enemy.global_position = world_position
+	add_child(enemy)
 
 func setup(world_index: int, player_scene: PackedScene, player_color: Color) -> void:
 	world_id = world_index
@@ -27,6 +37,8 @@ func setup(world_index: int, player_scene: PackedScene, player_color: Color) -> 
 	var hud := preload("res://scenes/hud/hud.tscn").instantiate()
 	add_child(hud)
 	hud.setup(player)
+	if world_index == 0:
+		add_child(DEBUG_SPAWN_PANEL_SCENE.instantiate())
 
 
 func on_player_died() -> void:
