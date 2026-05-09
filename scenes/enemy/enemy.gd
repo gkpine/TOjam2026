@@ -1,27 +1,28 @@
 extends Character
 class_name Enemy
 
+const DEFAULT_BEHAVIOR := preload("res://scenes/enemy/behaviors/chaser.tres")
+
 @export var enemy_data: EnemyData
-@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 
 var sprite: AnimatedSprite2D
-var stop_distance: float = 60.0
+var behavior: EnemyBehavior
+var behavior_state: Dictionary = {}  # per-enemy scratch space for the behavior
 var _health_bar: StatusBar
 var _hit_scale_tween: Tween
 var _hit_flash_tween: Tween
-var _slide_tangent: Vector2 = Vector2.ZERO
-var _slide_persist_frames: int = 0
 
 
 func setup(data: EnemyData) -> void:
 	enemy_data = data
 	_apply_stats()
+	behavior = enemy_data.behavior if enemy_data.behavior else DEFAULT_BEHAVIOR
 	sprite = $AnimatedSprite2D
 	sprite.sprite_frames = _build_sprite_frames()
 	sprite.play("idle")
 	$CollisionShape2D.shape = CircleShape2D.new()
 	$CollisionShape2D.shape.radius = enemy_data.collision_radius
-	sprite.offset.y = enemy_data.collision_radius - (enemy_data.visible_sprite_height / 6.0);
+	sprite.offset.y = enemy_data.collision_radius - (enemy_data.visible_sprite_height / 6.0)
 	var reticle := preload("res://scenes/combat/targeting_reticle.tscn").instantiate()
 	add_child(reticle)
 	reticle.setup(enemy_data.collision_radius)
@@ -59,81 +60,37 @@ func _acquire_target() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if target == null or not is_instance_valid(target):
-		target = null
+	if is_casting:
 		velocity = Vector2.ZERO
-		if sprite and not is_attacking and sprite.animation != &"idle":
-			sprite.play("idle")
+		_update_animation()
 		move_and_slide()
 		return
+	velocity = behavior.compute_velocity(self, delta) if behavior else Vector2.ZERO
+	_update_animation()
+	move_and_slide()
+	if behavior:
+		for i in range(get_slide_collision_count()):
+			behavior.on_collision(self, get_slide_collision(i))
 
-	nav_agent.target_position = target.global_position
 
-	var dist := global_position.distance_to(target.global_position)
-	if dist <= stop_distance or nav_agent.is_navigation_finished():
-		velocity = Vector2.ZERO
-		if sprite and not is_attacking and sprite.animation != &"idle":
+func _update_animation() -> void:
+	if not sprite or is_attacking:
+		return
+	if velocity == Vector2.ZERO:
+		if sprite.animation != &"idle":
 			sprite.play("idle")
 	else:
-		var next_pos := nav_agent.get_next_path_position()
-		var direction := (next_pos - global_position).normalized()
-		velocity = direction * movement_speed
-		if sprite and not is_attacking:
-			if sprite.animation != &"run":
-				sprite.play("run")
-			sprite.flip_h = velocity.x < 0
+		if sprite.animation != &"run":
+			sprite.play("run")
+		sprite.flip_h = velocity.x < 0
 
-	var requested_speed := velocity.length()
-	move_and_slide()
-	if requested_speed > 0.0 and get_last_motion().length() < requested_speed * delta * 0.3:
-		_slide_along_obstacle(requested_speed)
-	else:
-		_slide_persist_frames = 0
-
-
-func _slide_along_obstacle(speed: float) -> void:
-	if target == null or not is_instance_valid(target):
-		return
-
-	var tangent: Vector2
-	if _slide_persist_frames > 0 and _slide_tangent != Vector2.ZERO:
-		tangent = _slide_tangent
-		_slide_persist_frames -= 1
-	else:
-		if get_slide_collision_count() == 0:
-			return
-		var avg_normal := Vector2.ZERO
-		for i in range(get_slide_collision_count()):
-			avg_normal += get_slide_collision(i).get_normal()
-		if avg_normal.length_squared() == 0.0:
-			return
-		avg_normal = avg_normal.normalized()
-		var path_dir := _path_lookahead_direction()
-		if path_dir.length_squared() < 1.0:
-			return
-		tangent = Vector2(-avg_normal.y, avg_normal.x)
-		if tangent.dot(path_dir) < 0.0:
-			tangent = -tangent
-		_slide_tangent = tangent
-		_slide_persist_frames = 6
-
-	velocity = tangent * speed
-	move_and_slide()
-
-
-func _path_lookahead_direction() -> Vector2:
-	var path := nav_agent.get_current_navigation_path()
-	if path.size() == 0:
-		return target.global_position - global_position
-	var idx := nav_agent.get_current_navigation_path_index()
-	var look_idx: int = mini(idx + 2, path.size() - 1)
-	return path[look_idx] - global_position
 
 func _apply_stats() -> void:
 	health = enemy_data.health
 	max_health = enemy_data.max_health if enemy_data.max_health > 0.0 else enemy_data.health
 	base_damage = enemy_data.base_damage
 	strength = enemy_data.strength
+	auto_attack_enabled = enemy_data.auto_attack_enabled
 	auto_attack_per_second = enemy_data.auto_attack_per_second
 	auto_attack_delay = enemy_data.auto_attack_delay
 	movement_speed = enemy_data.movement_speed

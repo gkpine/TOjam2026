@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://clflqwo3yaewr"]
+
+[ext_resource type="Texture2D" uid="uid://da8eh6fcelcfc" path="res://Tiny Swords (Free Pack)/Terrain/Decorations/Bushes/Bushe1.png" id="1_6lgux"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_23q4h"]
+atlas = ExtResource("1_6lgux")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j43xl"]
+atlas = ExtResource("1_6lgux")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vqthc"]
+atlas = ExtResource("1_6lgux")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fqo0c"]
+atlas = ExtResource("1_6lgux")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3pvnl"]
+atlas = ExtResource("1_6lgux")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v0g3f"]
+atlas = ExtResource("1_6lgux")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nhb2a"]
+atlas = ExtResource("1_6lgux")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ro4iq"]
+atlas = ExtResource("1_6lgux")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_slsil"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_23q4h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j43xl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vqthc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fqo0c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3pvnl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v0g3f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nhb2a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ro4iq")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[node name="Bush1" type="Node2D" unique_id=1804671666]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=215606707]
+sprite_frames = SubResource("SpriteFrames_slsil")
+autoplay = "default"
+frame_progress = 0.5639479

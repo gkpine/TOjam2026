@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ChaserBehavior" format=3]
+
+[ext_resource type="Script" path="res://scenes/enemy/behaviors/chaser_behavior.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+stop_distance = 60.0
