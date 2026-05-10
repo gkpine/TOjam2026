@@ -34,5 +34,7 @@ func compute_velocity(enemy: Enemy, delta: float) -> Vector2:
 
 	if dist <= stop_distance or dist < 0.001:
 		return Vector2.ZERO
-	var direction := to_target / dist
+	var direction := enemy.nav_direction_to(enemy.target.global_position)
+	if direction == Vector2.ZERO:
+		return Vector2.ZERO
 	return direction * enemy.movement_speed

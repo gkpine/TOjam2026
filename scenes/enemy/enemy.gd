@@ -4,6 +4,7 @@ class_name Enemy
 const DEFAULT_BEHAVIOR := preload("res://scenes/enemy/behaviors/chaser.tres")
 
 @export var enemy_data: EnemyData
+@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 
 var sprite: AnimatedSprite2D
 var behavior: EnemyBehavior
@@ -67,10 +68,59 @@ func _physics_process(delta: float) -> void:
 		return
 	velocity = behavior.compute_velocity(self, delta) if behavior else Vector2.ZERO
 	_update_animation()
+	var requested_speed := velocity.length()
 	move_and_slide()
 	if behavior:
 		for i in range(get_slide_collision_count()):
 			behavior.on_collision(self, get_slide_collision(i))
+	# Anti-stick: if move_and_slide barely produced any motion (catching on a
+	# tile corner, wedged in a concave pocket), push toward the lookahead
+	# waypoint past the corner and slide again. Threshold = half of expected
+	# per-frame motion, which fires when we're pushing steeper than ~60° into
+	# a wall — normal wall-sliding stays untouched.
+	if requested_speed > 0.0 and get_last_motion().length() < requested_speed * delta * 0.5:
+		_slide_along_obstacle(requested_speed)
+
+
+# Set the nav goal and return a unit vector toward the next path waypoint.
+# Returns Vector2.ZERO when the path is finished (arrived / unreachable) — the
+# caller should treat that as "stop." Behaviors call this instead of
+# normalizing (target - position) themselves so navigation routes around
+# obstacles baked into the world's NavigationPolygon (see world.tscn).
+func nav_direction_to(world_pos: Vector2) -> Vector2:
+	nav_agent.target_position = world_pos
+	if nav_agent.is_navigation_finished():
+		return Vector2.ZERO
+	var next_pos := nav_agent.get_next_path_position()
+	var to_next := next_pos - global_position
+	if to_next.length_squared() < 0.001:
+		var direct := world_pos - global_position
+		return direct.normalized() if direct.length_squared() > 0.0 else Vector2.ZERO
+	return to_next.normalized()
+
+
+func _slide_along_obstacle(speed: float) -> void:
+	# Push toward the waypoint two steps ahead on the nav path — that's the
+	# point on the *other* side of whichever corner we're catching on. Letting
+	# move_and_slide() project this against the wall produces a slide *around*
+	# the corner instead of *into* the next wall (which the previous
+	# tangent-from-normal version did when the wall direction changed).
+	var path_dir := _path_lookahead_direction()
+	if path_dir.length_squared() < 1.0:
+		return
+	velocity = path_dir.normalized() * speed
+	move_and_slide()
+
+
+func _path_lookahead_direction() -> Vector2:
+	var path := nav_agent.get_current_navigation_path()
+	if path.size() == 0:
+		if target != null and is_instance_valid(target):
+			return target.global_position - global_position
+		return velocity
+	var idx := nav_agent.get_current_navigation_path_index()
+	var look_idx: int = mini(idx + 2, path.size() - 1)
+	return path[look_idx] - global_position
 
 
 func _update_animation() -> void:
