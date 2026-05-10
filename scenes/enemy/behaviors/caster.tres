@@ -6,3 +6,4 @@
 [resource]
 script = ExtResource("1")
 ability = ExtResource("2_blast")
+cast_range = 350.0
