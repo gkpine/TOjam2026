@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://ch28gpqptpb1q"
+path="res://.godot/imported/sfx_dan_enemy_dying01.wav-5877b44541867406a69b439716d2bd9c.sample"
+
+[deps]
+
+source_file="res://assets/sound/sound effects/sfx_dan_enemy_dying01.wav"
+dest_files=["res://.godot/imported/sfx_dan_enemy_dying01.wav-5877b44541867406a69b439716d2bd9c.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

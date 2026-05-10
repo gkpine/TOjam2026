@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://qag3lk1liv4v"
+path="res://.godot/imported/sfx_dan_player_impact01.wav-d97377301db3e41d4cdc9a010c4b787e.sample"
+
+[deps]
+
+source_file="res://assets/sound/sound effects/sfx_dan_player_impact01.wav"
+dest_files=["res://.godot/imported/sfx_dan_player_impact01.wav-d97377301db3e41d4cdc9a010c4b787e.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

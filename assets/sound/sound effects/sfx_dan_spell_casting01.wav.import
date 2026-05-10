@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://coh2tco24eq2o"
+path="res://.godot/imported/sfx_dan_spell_casting01.wav-07a93a6673a708e11252562e4c06ba14.sample"
+
+[deps]
+
+source_file="res://assets/sound/sound effects/sfx_dan_spell_casting01.wav"
+dest_files=["res://.godot/imported/sfx_dan_spell_casting01.wav-07a93a6673a708e11252562e4c06ba14.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

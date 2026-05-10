@@ -20,6 +20,7 @@ func _ready() -> void:
 		var viewport := SubViewport.new()
 		viewport.handle_input_locally = false
 		viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		viewport.audio_listener_enable_2d = true
 		container.add_child(viewport)
 
 		var world := WorldScene.instantiate()

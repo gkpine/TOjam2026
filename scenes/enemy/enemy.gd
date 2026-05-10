@@ -13,6 +13,42 @@ var _health_bar: StatusBar
 var _hit_scale_tween: Tween
 var _hit_flash_tween: Tween
 
+# available actions: "swing", "impact", "death"
+func play_sound(action: String) -> void:
+	match action:
+		"swing":
+			$AudioStreamPlayer2D.volume_db = -20
+			$AudioStreamPlayer2D.stream = preload("res://assets/sound/sound effects/sfx_dan_enemy_swing03.wav")
+		"impact":
+			$AudioStreamPlayer2D.volume_db = -10
+			$AudioStreamPlayer2D.stream = preload("res://assets/sound/sound effects/sfx_dan_enemy_impact01.wav")
+		"death":
+			# Death sound must outlive the enemy — the body's queue_free() at the
+			# end of this frame would free the on-body AudioStreamPlayer2D and cut
+			# the clip. Spawn a detached one-shot on the parent world that
+			# self-frees when the stream finishes.
+			_play_one_shot(
+				preload("res://assets/sound/sound effects/sfx_dan_enemy_dying01.wav"),
+				-10,
+			)
+			return
+		_:
+			return
+	$AudioStreamPlayer2D.play()
+
+
+func _play_one_shot(stream: AudioStream, db: float) -> void:
+	var world := get_parent()
+	if world == null:
+		return
+	var p := AudioStreamPlayer2D.new()
+	p.stream = stream
+	p.volume_db = db
+	p.autoplay = true
+	p.finished.connect(p.queue_free)
+	world.add_child(p)
+	p.global_position = global_position
+	
 
 func _ready() -> void:
 	# Match the nav agent's footprint to the actual body so path-postprocessing
@@ -221,13 +257,19 @@ func _build_sprite_frames() -> SpriteFrames:
 
 func play_attack_animation(anim_name: StringName = &"attack") -> void:
 	is_attacking = true
+	play_sound("swing")
 	sprite.play(anim_name)
 	await sprite.animation_finished
 	is_attacking = false
 
 
 func take_damage(amount: float, damage_type: String = "auto_attack", attacker: Character = null) -> void:
+	if (health - amount) <= 0.0:
+		play_sound("death")
+	
 	super.take_damage(amount, damage_type, attacker)
+
+	play_sound("impact")
 	_play_hit_reaction()
 
 

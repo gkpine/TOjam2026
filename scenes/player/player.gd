@@ -7,6 +7,7 @@ const DEFAULT_WHIRLWIND: AbilityData = preload("res://scenes/ability/types/whirl
 const DEFAULT_GUARD: AbilityData = preload("res://scenes/ability/types/guard.tres")
 const LEVEL_DATA: LevelData = preload("res://scenes/player/level_data.tres")
 const MAX_ABILITY_SLOTS := 4
+const CASTING_SOUND := preload("res://assets/sound/sound effects/sfx_dan_spell_casting01.wav")
 const UPGRADE_POOL: Array[UpgradeData] = [
 	preload("res://scenes/upgrade/types/max_health.tres"),
 	preload("res://scenes/upgrade/types/strength.tres"),
@@ -41,6 +42,40 @@ var is_guarding: bool = false
 var _guard_timer: float = 0.0
 var _guard_duration: float = 0.0
 
+func play_sound(action: String, duration: float = 0.0) -> void:
+	match action:
+		"swing":
+			$AudioStreamPlayer2D.volume_db = -20
+			$AudioStreamPlayer2D.stream = preload("res://assets/sound/sound effects/sfx_dan_player_swing02.wav")
+		"casting":
+			$AudioStreamPlayer2D.volume_db = 0
+			$AudioStreamPlayer2D.stream = CASTING_SOUND
+		"impact":
+			$AudioStreamPlayer2D.volume_db = -10
+			$AudioStreamPlayer2D.stream = preload("res://assets/sound/sound effects/sfx_dan_player_impact01.wav")
+		"death":
+			# Death sound must outlive the player — die() ends with queue_free(),
+			# which would free this AudioStreamPlayer2D and cut the clip. Spawn a
+			# detached one-shot on the parent world that self-frees on finish.
+			_play_one_shot(
+				preload("res://assets/sound/sound effects/sfx_dan_player_dying01.wav"),
+				0.0,
+			)
+			return
+		_:
+			return
+
+	$AudioStreamPlayer2D.play()
+	# Optional auto-stop: clip the audio to `duration` seconds (e.g. tying the
+	# casting loop to the spell's cast_time). The stream-equality check makes
+	# the timer a no-op if a different sound has since started on the same
+	# player, so we don't accidentally cut off a later sound.
+	if duration > 0.0:
+		var playing_stream: AudioStream = $AudioStreamPlayer2D.stream
+		create_tween().tween_callback(func() -> void:
+			if $AudioStreamPlayer2D.stream == playing_stream:
+				$AudioStreamPlayer2D.stop()
+		).set_delay(duration)
 
 func setup(index: int, color: Color) -> void:
 	_apply_stats(DEFAULT_DATA)
@@ -143,6 +178,7 @@ func _add_animation(frames: SpriteFrames, anim_name: String, sheet: Texture2D, f
 
 func play_attack_animation(anim_name: StringName = &"attack") -> void:
 	is_attacking = true
+	play_sound("swing")
 	sprite.play(anim_name)
 	await sprite.animation_finished
 	is_attacking = false
@@ -239,6 +275,7 @@ func _try_use_ability(slot: int) -> void:
 	var ability := abilities[slot]
 	if ability.cast_time > 0.0:
 		_casting_slot = slot
+		play_sound("casting", ability.cast_time)
 		start_cast(ability)
 		ability_used.emit(slot)
 	elif ability.execute(self):
@@ -278,6 +315,7 @@ func _use_card_ability_on_target(slot: int, target_player: Player) -> void:
 	_casting_target = target_player
 	if ability.cast_time > 0.0:
 		_casting_slot = slot
+		play_sound("casting", ability.cast_time)
 		start_cast(ability)
 		ability_used.emit(slot)
 	else:
@@ -359,6 +397,15 @@ func try_grant_card(ability: AbilityData) -> bool:
 	return false
 
 
+func cancel_cast() -> void:
+	# Stop the casting loop on interruption. Guarded so we only stop the audio
+	# player if it's currently playing the casting clip — protects against
+	# cutting off a later sound that has since taken over the stream slot.
+	if $AudioStreamPlayer2D.stream == CASTING_SOUND:
+		$AudioStreamPlayer2D.stop()
+	super()
+
+
 func _on_cast_finished() -> void:
 	var slot := _casting_slot
 	_casting_slot = -1
@@ -378,7 +425,21 @@ func take_damage(amount: float, damage_type: String = "auto_attack", attacker: C
 
 
 func die() -> void:
+	play_sound("death")
 	var world := get_parent()
 	if world and world.has_method("on_player_died"):
 		world.on_player_died()
 	super()
+
+
+func _play_one_shot(stream: AudioStream, db: float) -> void:
+	var world := get_parent()
+	if world == null:
+		return
+	var p := AudioStreamPlayer2D.new()
+	p.stream = stream
+	p.volume_db = db
+	p.autoplay = true
+	p.finished.connect(p.queue_free)
+	world.add_child(p)
+	p.global_position = global_position

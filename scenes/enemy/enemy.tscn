@@ -20,3 +20,6 @@ path_desired_distance = 24.0
 path_postprocessing = 1
 radius = 20.0
 debug_path_custom_color = Color(1, 0, 1, 1)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=412253576]
+volume_db = -20.0
