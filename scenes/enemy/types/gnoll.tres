@@ -16,3 +16,5 @@ loot_table = {
 &"smite": 0.3,
 &"summon_enemy": 0.4
 }
+difficulty_scale_strength = 0.2
+difficulty_scale_max_health = 5.0
