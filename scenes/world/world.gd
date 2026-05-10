@@ -50,14 +50,16 @@ func is_spawnable_at(world_pos: Vector2, clearance_radius: float = 24.0) -> bool
 	return true
 
 
-func spawn_enemy_at(data: EnemyData, world_position: Vector2) -> void:
-	# One-shot helper used by the debug panel and the SummonEnemy ability.
+func spawn_enemy_at(data: EnemyData, world_position: Vector2) -> Enemy:
+	# One-shot helper used by the debug panel, the SummonEnemy ability, and
+	# the shepherd behavior (which tracks the returned minion in its pool).
 	# Bypasses SpawnRegion bookkeeping — these enemies don't count against any
 	# region's alive cap and don't drop loot on death.
-	var enemy := ENEMY_SCENE.instantiate()
+	var enemy: Enemy = ENEMY_SCENE.instantiate()
 	enemy.setup(data)
 	enemy.global_position = world_position
 	add_child(enemy)
+	return enemy
 
 
 func get_all_enemy_types() -> Array[EnemyData]:
