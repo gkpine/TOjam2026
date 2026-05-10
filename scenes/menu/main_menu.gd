@@ -8,6 +8,10 @@ var _cpu_toggles: Array[Button] = []
 @onready var _btn_4: Button = %Btn4
 @onready var _player_config: VBoxContainer = %PlayerConfigContainer
 @onready var _title_label: Label = $CenterContainer/VBoxContainer/TitleLabel
+@onready var _goat: Sprite2D = $Goat
+
+var _goat_velocity: Vector2 = Vector2(180, 140)
+var _goat_angular_velocity: float = 1.2  # radians/sec
 
 
 func _ready() -> void:
@@ -17,6 +21,32 @@ func _ready() -> void:
 	_start_button.disabled = true
 	_player_config.visible = false
 	_start_title_bulge()
+
+
+func _process(delta: float) -> void:
+	_animate_goat(delta)
+
+
+func _animate_goat(delta: float) -> void:
+	_goat.position += _goat_velocity * delta
+	_goat.rotation += _goat_angular_velocity * delta
+
+	# Bounce off the viewport edges. Use the un-rotated half-extents (texture
+	# size × scale × 0.5) as the bounce boundary — close enough for the visual,
+	# and stable as the sprite rotates. The velocity-sign guard prevents getting
+	# stuck flipping at an edge if the sprite spawns partway past it.
+	var screen := get_viewport_rect().size
+	var tex := _goat.texture.get_size()
+	var half_w: float = tex.x * _goat.scale.x * 0.5
+	var half_h: float = tex.y * _goat.scale.y * 0.5
+	if _goat.position.x - half_w < 0.0 and _goat_velocity.x < 0.0:
+		_goat_velocity.x = -_goat_velocity.x
+	elif _goat.position.x + half_w > screen.x and _goat_velocity.x > 0.0:
+		_goat_velocity.x = -_goat_velocity.x
+	if _goat.position.y - half_h < 0.0 and _goat_velocity.y < 0.0:
+		_goat_velocity.y = -_goat_velocity.y
+	elif _goat.position.y + half_h > screen.y and _goat_velocity.y > 0.0:
+		_goat_velocity.y = -_goat_velocity.y
 
 
 func _start_title_bulge() -> void:

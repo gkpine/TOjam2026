@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://db4iw12ptl5c"]
 
 [ext_resource type="Script" uid="uid://bgspjudkb63w5" path="res://scenes/menu/main_menu.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bgq001jt6akio" path="res://assets/goat.png" id="2_3rkf3"]
 
 [node name="MainMenu" type="Control" unique_id=1870695215]
 layout_mode = 3
@@ -61,3 +62,9 @@ theme_override_constants/separation = 8
 unique_name_in_owner = true
 layout_mode = 2
 text = "Start Game"
+
+[node name="Goat" type="Sprite2D" parent="." unique_id=288895332]
+z_index = -1
+position = Vector2(126, 304)
+scale = Vector2(0.5453686, 0.5453686)
+texture = ExtResource("2_3rkf3")
