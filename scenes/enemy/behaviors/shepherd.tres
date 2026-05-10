@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ShepherdBehavior" format=3 uid="uid://bnxknq84yl7u7"]
+
+[ext_resource type="Script" uid="uid://dhy07mnajpmhk" path="res://scenes/enemy/behaviors/shepherd_behavior.gd" id="1_script"]
+[ext_resource type="Resource" uid="uid://b7222ey4bq842" path="res://scenes/enemy/types/sheep.tres" id="2_sheep"]
+
+[resource]
+script = ExtResource("1_script")
+num_sheep = 5
+minion_data = ExtResource("2_sheep")
+spawn_cooldown = 4.0
+spawn_offset_radius = 70.0
+throw_cooldown = 3.0
+initial_throw_delay = 2.5
+grab_distance = 40.0
+stop_distance = 220.0
+projectile_speed = 520.0
+projectile_damage = 14.0
+projectile_lifetime = 2.0

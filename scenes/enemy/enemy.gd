@@ -37,17 +37,18 @@ func setup(data: EnemyData) -> void:
 	add_child(reticle)
 	reticle.setup(enemy_data.collision_radius)
 
-	_health_bar = StatusBar.new()
-	add_child(_health_bar)
-	_health_bar.setup(
-		preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png"),
-		preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png"),
-		1
-	)
-	_health_bar.set_fill_color(Color(1.0, 0.2, 0.2))
-	_health_bar.position.x = -_health_bar.get_bar_width() / 2.0
-	_health_bar.position.y = sprite.offset.y - (enemy_data.visible_sprite_height / 2)
-	health_changed.connect(_on_health_changed)
+	if (max_health > 1 and health > 0):
+		_health_bar = StatusBar.new()
+		add_child(_health_bar)
+		_health_bar.setup(
+			preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png"),
+			preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png"),
+			1
+		)
+		_health_bar.set_fill_color(Color(1.0, 0.2, 0.2))
+		_health_bar.position.x = -_health_bar.get_bar_width() / 2.0
+		_health_bar.position.y = sprite.offset.y - (enemy_data.visible_sprite_height / 2)
+		health_changed.connect(_on_health_changed)
 
 
 func _process(delta: float) -> void:
@@ -75,6 +76,8 @@ func _physics_process(delta: float) -> void:
 		_update_animation()
 		move_and_slide()
 		return
+	if behavior:
+		behavior.tick(self, delta)
 	velocity = behavior.compute_velocity(self, delta) if behavior else Vector2.ZERO
 	_update_animation()
 	var requested_velocity := velocity
@@ -204,9 +207,13 @@ func _build_sprite_frames() -> SpriteFrames:
 	var frames := SpriteFrames.new()
 	var base_path := "res://assets/enemies/%s/%s_" % [enemy_data.enemy_name, enemy_data.enemy_name]
 
-	_add_animation(frames, "idle", load(base_path + "idle.png"), enemy_data.idle_frames)
-	_add_animation(frames, "attack", load(base_path + "attack.png"), enemy_data.attack_frames, false)
-	_add_animation(frames, "run", load(base_path + "run.png"), enemy_data.run_frames)
+	var idle_tex: Texture2D = enemy_data.idle_texture_override if enemy_data.idle_texture_override else load(base_path + "idle.png") as Texture2D
+	var attack_tex: Texture2D = enemy_data.attack_texture_override if enemy_data.attack_texture_override else load(base_path + "attack.png") as Texture2D
+	var run_tex: Texture2D = enemy_data.run_texture_override if enemy_data.run_texture_override else load(base_path + "run.png") as Texture2D
+
+	_add_animation(frames, "idle", idle_tex, enemy_data.idle_frames)
+	_add_animation(frames, "attack", attack_tex, enemy_data.attack_frames, false)
+	_add_animation(frames, "run", run_tex, enemy_data.run_frames)
 
 	frames.remove_animation("default")
 	return frames

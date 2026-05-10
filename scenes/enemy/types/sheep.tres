@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://b7222ey4bq842"]
+
+[ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://crkrcrnr8djf5" path="res://Tiny Swords (Free Pack)/Terrain/Resources/Meat/Sheep/Sheep_Idle.png" id="2_idle"]
+[ext_resource type="Texture2D" uid="uid://dhq265e2of5a7" path="res://Tiny Swords (Free Pack)/Terrain/Resources/Meat/Sheep/Sheep_Move.png" id="3_move"]
+[ext_resource type="Resource" uid="uid://csheepres7m3x" path="res://scenes/enemy/behaviors/sheep.tres" id="4_behavior"]
+
+[resource]
+script = ExtResource("1_script")
+enemy_name = "sheep"
+behavior = ExtResource("4_behavior")
+frame_size = 128
+visible_sprite_height = 64
+idle_frames = 6
+attack_frames = 6
+run_frames = 4
+idle_texture_override = ExtResource("2_idle")
+attack_texture_override = ExtResource("2_idle")
+run_texture_override = ExtResource("3_move")
+health = 1.0
+max_health = 1.0
+base_damage = 0.0
+auto_attack_enabled = false
+auto_attack_per_second = 0.0
+auto_attack_delay = 0.0
+movement_speed = 80.0
+target_range_px = 0.0
+auto_attack_range_px = 0.0
+collision_radius = 14.0
+exp_reward = 1.0

@@ -1,0 +1,6 @@
+[gd_resource type="Resource" script_class="SheepBehavior" format=3 uid="uid://csheepres7m3x"]
+
+[ext_resource type="Script" path="res://scenes/enemy/behaviors/sheep_behavior.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
