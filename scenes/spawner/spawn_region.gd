@@ -88,7 +88,6 @@ func _spawn_enemy() -> void:
 	var world := get_parent()
 	var pt := _find_spawn_point(world)
 	if pt == Vector2.INF:
-		push_warning("SpawnRegion '%s': no valid spawn point found in %d attempts; check that the polygon covers walkable ground." % [name, max_sample_attempts])
 		return
 	var data: EnemyData = enemy_types.pick_random() as EnemyData
 	if data == null:
@@ -110,12 +109,24 @@ func _spawn_enemy() -> void:
 func _find_spawn_point(world: Node) -> Vector2:
 	# Rejection sampling: pick uniform points in the polygon, ask the world
 	# whether each one is spawnable, return the first that is. Returns
-	# Vector2.INF if every attempt failed.
-	var has_validator := validate_position and world != null and world.has_method("is_spawnable_at")
+	# Vector2.INF if every attempt failed, and logs a breakdown of why each
+	# attempt was rejected so a misplaced/oversized polygon is debuggable.
+	var has_validator := validate_position and world != null and world.has_method("describe_spawn_failure")
+	var failures := {"off_ground": 0, "on_water": 0, "blocked": 0}
 	for i in max_sample_attempts:
 		var pt := _random_point_in_region()
-		if not has_validator or world.is_spawnable_at(pt, obstacle_clearance):
+		if not has_validator:
 			return pt
+		var reason: String = world.describe_spawn_failure(pt, obstacle_clearance)
+		if reason == "":
+			return pt
+		failures[reason] = failures.get(reason, 0) + 1
+	print("[SpawnRegion '%s'] exhausted %d attempts at %s — off_ground=%d on_water=%d blocked=%d (clearance=%.0f)" % [
+		name, max_sample_attempts, global_position, failures["off_ground"], failures["on_water"], failures["blocked"], obstacle_clearance
+	])
+	push_warning("SpawnRegion '%s': no valid spawn point in %d attempts (off_ground=%d on_water=%d blocked=%d); check polygon coverage or lower obstacle_clearance." % [
+		name, max_sample_attempts, failures["off_ground"], failures["on_water"], failures["blocked"]
+	])
 	return Vector2.INF
 
 

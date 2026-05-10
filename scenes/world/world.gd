@@ -22,18 +22,24 @@ func get_world_id() -> int:
 
 
 func is_spawnable_at(world_pos: Vector2, clearance_radius: float = 24.0) -> bool:
-	# A point is spawnable if it sits on a Ground tile, is not on a Water tile,
-	# and has no static body (e.g. a tree's StaticBody2D) within
-	# `clearance_radius` pixels. Each check is fail-open: a missing tile layer
-	# or absent World2D is treated as "no opinion" rather than blocking.
+	return describe_spawn_failure(world_pos, clearance_radius) == ""
+
+
+func describe_spawn_failure(world_pos: Vector2, clearance_radius: float = 24.0) -> String:
+	# Returns "" if the point is spawnable, otherwise one of "off_ground",
+	# "on_water", or "blocked" describing which check rejected it. A point is
+	# spawnable if it sits on a Ground tile, is not on a Water tile, and has
+	# no static body (e.g. a tree's StaticBody2D) within `clearance_radius`
+	# pixels. Each check is fail-open: a missing tile layer or absent World2D
+	# is treated as "no opinion" rather than blocking.
 	if _ground_tilemap != null:
 		var ground_cell := _ground_tilemap.local_to_map(_ground_tilemap.to_local(world_pos))
 		if _ground_tilemap.get_cell_source_id(ground_cell) == -1:
-			return false
+			return "off_ground"
 	if _water_tilemap != null:
 		var water_cell := _water_tilemap.local_to_map(_water_tilemap.to_local(world_pos))
 		if _water_tilemap.get_cell_source_id(water_cell) != -1:
-			return false
+			return "on_water"
 	if clearance_radius > 0.0:
 		var w2d := get_world_2d()
 		if w2d != null and w2d.direct_space_state != null:
@@ -43,11 +49,16 @@ func is_spawnable_at(world_pos: Vector2, clearance_radius: float = 24.0) -> bool
 				_clearance_query.shape = _clearance_shape
 				_clearance_query.collide_with_areas = false
 				_clearance_query.collide_with_bodies = true
+				# World layer (1) only — trees and other static geometry block
+				# spawns, but other enemies and the player do not. Without this
+				# mask, overlapping SpawnRegions starve each other once one fills
+				# up because the existing mob cluster rejects further attempts.
+				_clearance_query.collision_mask = 1
 			_clearance_shape.radius = clearance_radius
 			_clearance_query.transform = Transform2D(0.0, world_pos)
 			if not w2d.direct_space_state.intersect_shape(_clearance_query, 1).is_empty():
-				return false
-	return true
+				return "blocked"
+	return ""
 
 
 func spawn_enemy_at(data: EnemyData, world_position: Vector2) -> Enemy:
