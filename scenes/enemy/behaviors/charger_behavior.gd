@@ -53,7 +53,11 @@ func compute_velocity(enemy: Enemy, delta: float) -> Vector2:
 				return Vector2.ZERO
 			if dist <= stop_distance:
 				return Vector2.ZERO
-			var dir := (enemy.target.global_position - enemy.global_position).normalized()
+			# Pathfind during the approach. The CHARGING dash below intentionally
+			# stays direct — a locked straight-line dash is the point.
+			var dir := enemy.nav_direction_to(enemy.target.global_position)
+			if dir == Vector2.ZERO:
+				return Vector2.ZERO
 			return dir * enemy.movement_speed * approach_speed_multiplier
 
 		PHASE_WINDUP:

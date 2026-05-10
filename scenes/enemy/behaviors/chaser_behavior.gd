@@ -26,15 +26,24 @@ func compute_velocity(enemy: Enemy, _delta: float) -> Vector2:
 	var dist := to_target.length()
 	if dist < 0.001:
 		return Vector2.ZERO
-	var direction := to_target / dist
 
+	# Outside the slowdown band: pathfind around obstacles via the nav agent.
 	if dist >= stop_distance + slow_band:
-		return direction * enemy.movement_speed
+		var nav_dir := enemy.nav_direction_to(enemy.target.global_position)
+		if nav_dir == Vector2.ZERO:
+			return Vector2.ZERO
+		return nav_dir * enemy.movement_speed
 
+	# Slowdown band: still nav-aware, but ramp speed down toward stop_distance.
 	if dist >= stop_distance:
+		var nav_dir := enemy.nav_direction_to(enemy.target.global_position)
+		if nav_dir == Vector2.ZERO:
+			return Vector2.ZERO
 		var t := (dist - stop_distance) / slow_band
-		return direction * enemy.movement_speed * t
+		return nav_dir * enemy.movement_speed * t
 
-	# Inside stop_distance — back off proportional to overlap depth.
+	# Inside stop_distance — line-of-sight contact, back off along the direct
+	# vector proportional to overlap depth. Nav would be noisy here.
+	var direction := to_target / dist
 	var overlap_ratio: float = (stop_distance - dist) / stop_distance
 	return -direction * enemy.movement_speed * separation_strength * overlap_ratio
