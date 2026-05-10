@@ -1,7 +1,7 @@
 extends CanvasLayer
 
-const SMALL_BAR_BASE := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png")
-const SMALL_BAR_FILL := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png")
+const SMALL_BAR_BASE := preload("res://assets/ui/small_bar_base.png")
+const SMALL_BAR_FILL := preload("res://assets/ui/small_bar_fill.png")
 const MARGIN := 16.0
 const XP_BAR_HEIGHT := 42.0
 

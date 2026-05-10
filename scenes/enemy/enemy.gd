@@ -77,8 +77,8 @@ func setup(data: EnemyData) -> void:
 		_health_bar = StatusBar.new()
 		add_child(_health_bar)
 		_health_bar.setup(
-			preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png"),
-			preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png"),
+			preload("res://assets/ui/small_bar_base.png"),
+			preload("res://assets/ui/small_bar_fill.png"),
 			1
 		)
 		_health_bar.set_fill_color(Color(1.0, 0.2, 0.2))

@@ -2,8 +2,8 @@ class_name PlayerSelectOption
 extends Control
 
 const CursorBracketScene := preload("res://scenes/ui/cursor_bracket.tscn")
-const BAR_BASE := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png")
-const BAR_FILL := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png")
+const BAR_BASE := preload("res://assets/ui/small_bar_base.png")
+const BAR_FILL := preload("res://assets/ui/small_bar_fill.png")
 const FRAME_SIZE := 192
 const SPRITE_DISPLAY_SIZE := 148.0
 const OPTION_SIZE := Vector2(96, 96)

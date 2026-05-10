@@ -1,6 +1,6 @@
 extends Node2D
 
-const CURSOR_SPRITE := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Cursors/Cursor_04.png")
+const CURSOR_SPRITE := preload("res://assets/ui/cursor_04.png")
 const BOUNCE_AMOUNT := 10.0
 const BOUNCE_DURATION := 0.5
 

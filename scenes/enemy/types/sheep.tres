@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://b7222ey4bq842"]
 
 [ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://crkrcrnr8djf5" path="res://Tiny Swords (Free Pack)/Terrain/Resources/Meat/Sheep/Sheep_Idle.png" id="2_idle"]
-[ext_resource type="Texture2D" uid="uid://dhq265e2of5a7" path="res://Tiny Swords (Free Pack)/Terrain/Resources/Meat/Sheep/Sheep_Move.png" id="3_move"]
+[ext_resource type="Texture2D" uid="uid://crkrcrnr8djf5" path="res://assets/enemies/sheep/sheep_idle.png" id="2_idle"]
+[ext_resource type="Texture2D" uid="uid://dhq265e2of5a7" path="res://assets/enemies/sheep/sheep_move.png" id="3_move"]
 [ext_resource type="Resource" uid="uid://csheepres7m3x" path="res://scenes/enemy/behaviors/sheep.tres" id="4_behavior"]
 
 [resource]
