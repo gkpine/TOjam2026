@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GameState="*res://scripts/autoload/game_state.gd"
 InputManager="*res://scripts/autoload/input_manager.gd"
+Music="*uid://bbn1yh5bx5hs8"
 
 [display]
 
@@ -29,6 +30,7 @@ window/stretch/mode="canvas_items"
 [gui]
 
 theme/custom="res://assets/theme/default_theme.tres"
+theme/custom_font="res://assets/fonts/VT323-Regular.ttf"
 
 [layer_names]
 
@@ -43,5 +45,6 @@ theme/custom="res://assets/theme/default_theme.tres"
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.2784314, 0.67058825, 0.6627451, 1)

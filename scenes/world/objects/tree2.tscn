@@ -67,8 +67,8 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_eq35o"]
-radius = 45.0
-height = 136.0
+radius = 39.0
+height = 78.0
 
 [node name="Tree" type="Node2D" unique_id=1876242429]
 z_index = 2

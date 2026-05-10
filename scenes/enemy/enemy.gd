@@ -4,6 +4,7 @@ class_name Enemy
 const DEFAULT_BEHAVIOR := preload("res://scenes/enemy/behaviors/chaser.tres")
 
 @export var enemy_data: EnemyData
+@onready var nav_agent: NavigationAgent2D = $NavigationAgent2D
 
 var sprite: AnimatedSprite2D
 var behavior: EnemyBehavior
@@ -11,6 +12,15 @@ var behavior_state: Dictionary = {}  # per-enemy scratch space for the behavior
 var _health_bar: StatusBar
 var _hit_scale_tween: Tween
 var _hit_flash_tween: Tween
+
+
+func _ready() -> void:
+	# Match the nav agent's footprint to the actual body so path-postprocessing
+	# (EDGECENTERED) routes far enough off walls that the body doesn't clip in.
+	# setup() runs before add_child, so @onready nav_agent isn't valid there —
+	# _ready fires after add_child, when enemy_data is already set.
+	if enemy_data:
+		nav_agent.radius = enemy_data.collision_radius
 
 
 func setup(data: EnemyData) -> void:
@@ -67,10 +77,89 @@ func _physics_process(delta: float) -> void:
 		return
 	velocity = behavior.compute_velocity(self, delta) if behavior else Vector2.ZERO
 	_update_animation()
+	var requested_velocity := velocity
 	move_and_slide()
 	if behavior:
 		for i in range(get_slide_collision_count()):
 			behavior.on_collision(self, get_slide_collision(i))
+	# Anti-stick: if move_and_slide barely produced any motion (catching on a
+	# tile corner, wedged in a concave pocket), redirect the requested velocity
+	# along the wall at full speed and slide again. Threshold = half of expected
+	# per-frame motion, which fires when we're pushing steeper than ~60° into
+	# a wall — normal wall-sliding stays untouched.
+	if requested_velocity.length_squared() > 0.0 and \
+			get_last_motion().length() < requested_velocity.length() * delta * 0.5:
+		_slide_along_obstacle(requested_velocity)
+
+
+# Set the nav goal and return a unit vector toward the next path waypoint.
+# Returns Vector2.ZERO when the path is finished (arrived / unreachable) — the
+# caller should treat that as "stop." Behaviors call this instead of
+# normalizing (target - position) themselves so navigation routes around
+# obstacles baked into the world's NavigationPolygon (see world.tscn).
+func nav_direction_to(world_pos: Vector2) -> Vector2:
+	nav_agent.target_position = world_pos
+	if nav_agent.is_navigation_finished():
+		return Vector2.ZERO
+	var next_pos := nav_agent.get_next_path_position()
+	var to_next := next_pos - global_position
+	if to_next.length_squared() < 0.001:
+		var direct := world_pos - global_position
+		return direct.normalized() if direct.length_squared() > 0.0 else Vector2.ZERO
+	return to_next.normalized()
+
+
+func _slide_along_obstacle(desired_velocity: Vector2) -> void:
+	# Move at full speed *parallel* to the wall instead of leaving the slide to
+	# move_and_slide(). Letting the physics step slide a goal-pointing velocity
+	# produces almost no motion when the incidence is steep — slide-into-wall
+	# twice per frame for no benefit.
+	#
+	# Strategy: Vector2.slide(normal) removes the wall-perpendicular component
+	# from the desired velocity, leaving the tangential component pointing the
+	# right way (toward the goal). Normalising and scaling back to the full
+	# speed gives us proper sliding at the agent's intended speed.
+	if get_slide_collision_count() == 0:
+		return
+	var avg_normal := Vector2.ZERO
+	for i in range(get_slide_collision_count()):
+		avg_normal += get_slide_collision(i).get_normal()
+	if avg_normal.length_squared() == 0.0:
+		return
+	avg_normal = avg_normal.normalized()
+
+	var slid := desired_velocity.slide(avg_normal)
+	if slid.length_squared() < 1.0:
+		# Corner pinch — desired velocity is nearly anti-parallel to the
+		# average normal, so projecting it onto the wall plane vanishes. The
+		# only useful direction is *along* one of the walls' tangents. Use the
+		# path lookahead (which points past the corner along the nav route) to
+		# pick which side; if the lookahead is also perpendicular, just bail
+		# this frame instead of vibrating.
+		var path_dir := _path_lookahead_direction()
+		if path_dir.length_squared() < 1.0:
+			return
+		var tangent := Vector2(-avg_normal.y, avg_normal.x)
+		var dot := tangent.dot(path_dir)
+		if absf(dot) < 0.1:
+			return  # both tangents equally bad — let the path recompute
+		if dot < 0.0:
+			tangent = -tangent
+		slid = tangent * desired_velocity.length()
+
+	velocity = slid.normalized() * desired_velocity.length()
+	move_and_slide()
+
+
+func _path_lookahead_direction() -> Vector2:
+	var path := nav_agent.get_current_navigation_path()
+	if path.size() == 0:
+		if target != null and is_instance_valid(target):
+			return target.global_position - global_position
+		return velocity
+	var idx := nav_agent.get_current_navigation_path_index()
+	var look_idx: int = mini(idx + 2, path.size() - 1)
+	return path[look_idx] - global_position
 
 
 func _update_animation() -> void:

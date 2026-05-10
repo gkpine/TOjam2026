@@ -16,3 +16,7 @@ script = ExtResource("1_script")
 shape = SubResource("CircleShape2D_1")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=143875240]
+path_desired_distance = 24.0
+path_postprocessing = 1
+radius = 20.0
+debug_path_custom_color = Color(1, 0, 1, 1)
