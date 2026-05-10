@@ -30,6 +30,12 @@ func _ready() -> void:
 	if count > 1:
 		_add_separators(count, screen_size)
 
+	GameState.winner_declared.connect(_on_winner_declared)
+
+
+func _on_winner_declared(_winner_index: int) -> void:
+	get_tree().paused = true
+
 
 func _set_container_rect(container: SubViewportContainer, index: int, count: int, screen: Vector2) -> void:
 	match count:

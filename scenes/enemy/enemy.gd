@@ -76,13 +76,23 @@ func _physics_process(delta: float) -> void:
 func _update_animation() -> void:
 	if not sprite or is_attacking:
 		return
+
+	var face_dir_x := 0.0
+	if target != null and is_instance_valid(target):
+		face_dir_x = target.global_position.x - global_position.x
+	elif velocity.x != 0.0:
+		face_dir_x = velocity.x
+	if face_dir_x < 0.0:
+		sprite.flip_h = true
+	elif face_dir_x > 0.0:
+		sprite.flip_h = false
+
 	if velocity == Vector2.ZERO:
 		if sprite.animation != &"idle":
 			sprite.play("idle")
 	else:
 		if sprite.animation != &"run":
 			sprite.play("run")
-		sprite.flip_h = velocity.x < 0
 
 
 func _apply_stats() -> void:

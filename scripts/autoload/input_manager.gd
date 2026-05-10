@@ -13,7 +13,7 @@ const KB_BINDINGS := {
 	"ability_2": KEY_2,
 	"ability_3": KEY_3,
 	"ability_4": KEY_4,
-	"open_upgrades": KEY_U,
+	"open_upgrades": KEY_E,
 }
 
 const JOY_BUTTON_BINDINGS := {
@@ -22,7 +22,7 @@ const JOY_BUTTON_BINDINGS := {
 	"ability_2": JOY_BUTTON_Y,
 	"ability_3": JOY_BUTTON_RIGHT_SHOULDER,
 	"ability_4": JOY_BUTTON_LEFT_SHOULDER,
-	"open_upgrades": JOY_BUTTON_DPAD_UP,
+	"open_upgrades": JOY_BUTTON_B,
 }
 
 const KB_DISPLAY_NAMES := {
@@ -30,6 +30,7 @@ const KB_DISPLAY_NAMES := {
 	"ability_2": "2",
 	"ability_3": "3",
 	"ability_4": "4",
+	"open_upgrades": "E",
 }
 
 const JOY_DISPLAY_NAMES := {
@@ -37,6 +38,7 @@ const JOY_DISPLAY_NAMES := {
 	"ability_2": "Y",
 	"ability_3": "RB",
 	"ability_4": "LB",
+	"open_upgrades": "B",
 }
 
 const STICK_AXES := {
@@ -47,8 +49,14 @@ const STICK_AXES := {
 }
 
 
+var _virtual_movement: Array[Vector2] = [Vector2.ZERO, Vector2.ZERO, Vector2.ZERO, Vector2.ZERO]
+var _virtual_pressed: Array[Dictionary] = [{}, {}, {}, {}]
+var _cpu_controlled: Array[bool] = [false, false, false, false]
+
+
 func _ready() -> void:
 	_setup_input_map()
+	process_physics_priority = 100
 
 
 func _setup_input_map() -> void:
@@ -79,7 +87,26 @@ func _setup_input_map() -> void:
 				InputMap.action_add_event(full_action, btn_event)
 
 
+func _physics_process(_delta: float) -> void:
+	for i in range(4):
+		_virtual_pressed[i].clear()
+
+
+func set_cpu_controlled(player_index: int, enabled: bool) -> void:
+	_cpu_controlled[player_index] = enabled
+
+
+func set_virtual_movement(player_index: int, direction: Vector2) -> void:
+	_virtual_movement[player_index] = direction
+
+
+func press_virtual_action(player_index: int, action: String) -> void:
+	_virtual_pressed[player_index][action] = true
+
+
 func get_movement_vector(player_index: int) -> Vector2:
+	if _cpu_controlled[player_index]:
+		return _virtual_movement[player_index]
 	var prefix := "p%d_" % (player_index + 1)
 	return Input.get_vector(
 		prefix + "move_left",
@@ -90,11 +117,19 @@ func get_movement_vector(player_index: int) -> Vector2:
 
 
 func is_action_just_pressed(player_index: int, action: String) -> bool:
+	if _cpu_controlled[player_index]:
+		return _virtual_pressed[player_index].has(action)
 	return Input.is_action_just_pressed("p%d_%s" % [player_index + 1, action])
 
 
 func get_ability_label(player_index: int, slot_index: int) -> String:
 	var action := "ability_%d" % (slot_index + 1)
+	if player_index == 0:
+		return KB_DISPLAY_NAMES.get(action, "")
+	return JOY_DISPLAY_NAMES.get(action, "")
+
+
+func get_action_label(player_index: int, action: String) -> String:
 	if player_index == 0:
 		return KB_DISPLAY_NAMES.get(action, "")
 	return JOY_DISPLAY_NAMES.get(action, "")

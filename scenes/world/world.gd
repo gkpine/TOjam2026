@@ -36,7 +36,13 @@ func setup(world_index: int, player_scene: PackedScene, player_color: Color) -> 
 	hud.setup(player)
 	if world_index == 0:
 		add_child(DEBUG_SPAWN_PANEL_SCENE.instantiate())
+	if world_index < GameState.cpu_players.size() and GameState.cpu_players[world_index]:
+		InputManager.set_cpu_controlled(world_index, true)
+		var cpu := CpuController.new()
+		cpu.setup(player, world_index)
+		add_child(cpu)
 
 
 func on_player_died() -> void:
+	GameState.on_player_died(world_id)
 	player = null
