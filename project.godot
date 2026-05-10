@@ -19,7 +19,7 @@ config/icon="res://icon.svg"
 
 GameState="*res://scripts/autoload/game_state.gd"
 InputManager="*res://scripts/autoload/input_manager.gd"
-Music="*uid://bbn1yh5bx5hs8"
+Music="*res://scripts/autoload/music.gd"
 
 [display]
 
