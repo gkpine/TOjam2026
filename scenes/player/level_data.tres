@@ -1,8 +1,7 @@
-[gd_resource type="Resource" script_class="LevelData" format=3]
+[gd_resource type="Resource" script_class="LevelData" format=3 uid="uid://cr8fuusvw77kv"]
 
-[ext_resource type="Script" path="res://scenes/player/level_data.gd" id="1"]
+[ext_resource type="Script" uid="uid://b0rxor8ma82gj" path="res://scenes/player/level_data.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
-max_level = 10
-xp_requirements = PackedInt32Array(30, 50, 80, 120, 170, 230, 300, 380, 470)
+max_level = 20
