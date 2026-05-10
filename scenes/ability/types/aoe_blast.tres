@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1")
-radius = 400.0
+radius = 350.0
 ability_id = &"aoe_blast"
 ability_name = "AoE Blast"
 cooldown = 4.0

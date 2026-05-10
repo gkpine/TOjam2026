@@ -18,10 +18,12 @@ func apply_effect(caster: Character, target_player: Player = null) -> void:
 	var target_world := GameState.get_world(target_player.player_index)
 	if target_world == null:
 		return
-	var spawner := target_world.get_node_or_null("Spawner") as Spawner
-	if spawner == null or spawner.enemy_types.is_empty():
+	if not target_world.has_method("get_all_enemy_types"):
 		return
-	var enemy_data := spawner.enemy_types.pick_random() as EnemyData
+	var roster: Array[EnemyData] = target_world.get_all_enemy_types()
+	if roster.is_empty():
+		return
+	var enemy_data := roster.pick_random() as EnemyData
 	var angle := randf() * TAU
 	var dist := enemy_data.target_range_px * 0.8
 	var spawn_pos := target_player.global_position + Vector2(cos(angle), sin(angle)) * dist

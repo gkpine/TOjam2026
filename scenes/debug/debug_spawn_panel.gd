@@ -207,10 +207,9 @@ func _do_drop(_at: Vector2, data: Variant) -> void:
 
 
 func _get_enemy_types() -> Array[EnemyData]:
-	var spawner := _world.get_node_or_null("Spawner") as Spawner
-	if spawner == null:
+	if _world == null or not _world.has_method("get_all_enemy_types"):
 		return []
-	return spawner.enemy_types
+	return _world.get_all_enemy_types()
 
 
 func _make_icon(data: EnemyData) -> Texture2D:

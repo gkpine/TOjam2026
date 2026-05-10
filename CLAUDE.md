@@ -33,7 +33,7 @@ scenes/
   enemy/enemy.gd|.tscn             Enemy node, takes EnemyData via setup()
   enemy/enemy_data.gd              Enemy stat Resource
   enemy/types/*.tres               12 enemy definitions (bear, troll, thief, …)
-  spawner/spawner.gd|.tscn         Auto-spawns enemies on a timer
+  spawner/spawn_region.gd|.tscn    Polygon-shaped region with its own enemy roster + respawn cap
   ability/ability_data.gd          Ability Resource
   ability/types/{smite,whirlwind}  Ability definitions
   combat/                          Floating damage numbers, targeting reticle
@@ -47,7 +47,7 @@ assets/enemies/<name>/<name>_{idle,attack,run}.png   Enemy sprite sheets
 
 - **GDScript**, statically typed where practical. Tabs (not spaces) for indentation.
 - Files are `snake_case.gd` and come in trios: `foo.gd` + `foo.tscn` + `foo.gd.uid`. The `.uid` is engine-generated; don't hand-edit.
-- `class_name X` is used freely (e.g. `EnemyData`, `Spawner`, `Player`, `Character`). Add it when you make a new globally-referenceable class.
+- `class_name X` is used freely (e.g. `EnemyData`, `SpawnRegion`, `Player`, `Character`). Add it when you make a new globally-referenceable class.
 - Data lives in **`.tres` Resources** (Godot's ScriptableObject equivalent). Enemy stats, ability stats, level curves are all `.tres`.
 - Per-player UI = child of `World`. Game-wide overlays = child of `Game`. Don't mix.
 - **GDScript warnings are errors.** Any `var x := <variant-returning-call>()` will fail to parse with "type inferred as Variant." Fixes:
@@ -57,7 +57,7 @@ assets/enemies/<name>/<name>_{idle,attack,run}.png   Enemy sprite sheets
 
 ## Source-of-truth pointers
 
-- **Enemy list:** the spawner's `enemy_types: Array[EnemyData]` in `scenes/world/world.tscn:163`. Add a new `.tres` here and it shows up everywhere that reads from the spawner (including the debug spawn panel).
+- **Enemy spawning:** the world holds one or more `SpawnRegion` instances (`scenes/world/world.tscn`, the default region is at line ~207). Each has its own `enemy_types: Array[EnemyData]`, `max_alive` cap, `respawn_time`, and a `Polygon2D` child outlining the area. Code that needs the union of "every enemy that can spawn in this world" calls `World.get_all_enemy_types()` (used by the debug spawn panel and the `SummonEnemy` ability) — don't reach for a single global spawner; there isn't one.
 - **Input actions:** `scripts/autoload/input_manager.gd` — `BUTTON_ACTIONS`, `MOVEMENT_ACTIONS`, `KB_BINDINGS`, `JOY_BUTTON_BINDINGS`, `STICK_AXES`. Adding an action automatically registers it as `p1_<name>` … `p4_<name>`. Read with `InputManager.is_action_just_pressed(player_index, "<name>")`.
 - **Cross-player state:** `scripts/autoload/game_state.gd` — extend `player_data` in `reset()` to add new shared fields.
 - **Enemy sprite path scheme:** `res://assets/enemies/{enemy_name}/{enemy_name}_{idle|attack|run}.png`, with frame width = `EnemyData.frame_size` (default 192). See `scenes/enemy/enemy.gd:96-105`.

@@ -3,9 +3,8 @@
 [ext_resource type="Script" uid="uid://bpspx764as28n" path="res://scenes/world/world.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://b5mekofi8bd0k" path="res://scenes/world/objects/tree.tscn" id="2_bt7bg"]
 [ext_resource type="Texture2D" uid="uid://dyoc5aut25ddh" path="res://Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color1.png" id="2_sl2e5"]
-[ext_resource type="PackedScene" uid="uid://djdswx1sqo2ma" path="res://scenes/spawner/spawner.tscn" id="3_spawner"]
+[ext_resource type="PackedScene" path="res://scenes/spawner/spawn_region.tscn" id="3_spawn_region"]
 [ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="4_71ii3"]
-[ext_resource type="PackedScene" uid="uid://dtbkhjb2ulwou" path="res://scenes/enemy/enemy.tscn" id="4_enemy"]
 [ext_resource type="Resource" uid="uid://djmr7dedscd5a" path="res://scenes/enemy/types/skull.tres" id="5_skull"]
 [ext_resource type="Resource" uid="uid://dn22s3kfkujot" path="res://scenes/enemy/types/gnome.tres" id="6_gnome"]
 [ext_resource type="Resource" uid="uid://38cbgi7vsueu" path="res://scenes/enemy/types/thief.tres" id="7_thief"]
@@ -204,10 +203,10 @@ script = ExtResource("1_script")
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=75646214]
 
-[node name="Spawner" parent="." unique_id=2070305625 instance=ExtResource("3_spawner")]
+[node name="SpawnRegion" parent="." unique_id=2070305625 instance=ExtResource("3_spawn_region")]
 position = Vector2(400, 0)
-enemy_scene = ExtResource("4_enemy")
 enemy_types = Array[ExtResource("4_71ii3")]([ExtResource("5_skull"), ExtResource("6_gnome"), ExtResource("7_thief"), ExtResource("8_lizard"), ExtResource("9_spider"), ExtResource("10_snake"), ExtResource("11_gnoll"), ExtResource("12_bear"), ExtResource("13_panda"), ExtResource("14_turtle"), ExtResource("15_minotaur"), ExtResource("16_troll")])
+max_alive = 6
 
 [node name="Map" type="Node2D" parent="." unique_id=1803197977]
 
@@ -696,3 +695,14 @@ position = Vector2(2650, -1620)
 
 [node name="WaterRock13" parent="Map" unique_id=694845565 instance=ExtResource("21_xq18t")]
 position = Vector2(2642, -1325)
+
+[node name="SpawnRegion2" parent="." unique_id=248462520 instance=ExtResource("3_spawn_region")]
+position = Vector2(2244, -2087)
+enemy_types = Array[ExtResource("4_71ii3")]([ExtResource("5_skull")])
+max_alive = 5
+
+[node name="Polygon2D" parent="SpawnRegion2" index="0"]
+position = Vector2(-368, -94)
+polygon = PackedVector2Array(-229, -118, -197, 9, 1060, 11, 1066, 130, 1449, 138, 1458, 378, 1333, 394, 1335, 704, 896, 719, 887, 596, 1006, 588, 1014, 461, 893, 448, 881, 263, 427.19617, 256.73874, 431, 661, 50, 654, 52, 319, -462, 315, -468, 9, -903, -8, -926, -116)
+
+[editable path="SpawnRegion2"]
