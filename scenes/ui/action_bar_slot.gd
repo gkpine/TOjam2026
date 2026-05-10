@@ -7,7 +7,6 @@ const BLUE_REGULAR := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elem
 const BLUE_PRESSED := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Buttons/BigBlueButton_Pressed.png")
 const RED_REGULAR := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Buttons/BigRedButton_Regular.png")
 const RED_PRESSED := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Buttons/BigRedButton_Pressed.png")
-const FONT := preload("res://assets/fonts/VT323-Regular.ttf")
 
 const PIECE_SIZE := 64.0
 
@@ -29,6 +28,7 @@ var _desaturated: bool = false
 var _pieces: Array[TextureRect] = []
 var _icon_rect: TextureRect
 var _cooldown_label: Label
+var _keybind_label: Label
 var _shader_material: ShaderMaterial
 
 
@@ -44,6 +44,7 @@ func setup(variant: Variant, slot_width: float, slot_height: float) -> void:
 	_build_pieces(slot_width, slot_height)
 	_build_icon(slot_width, slot_height)
 	_build_cooldown_label(slot_width, slot_height)
+	_build_keybind_label(slot_width, slot_height)
 
 
 func _setup_shader() -> void:
@@ -97,13 +98,20 @@ func _build_cooldown_label(slot_width: float, slot_height: float) -> void:
 	_cooldown_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_cooldown_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_cooldown_label.size = Vector2(slot_width, slot_height)
-	_cooldown_label.add_theme_font_override("font", FONT)
 	_cooldown_label.add_theme_font_size_override("font_size", 28)
-	_cooldown_label.add_theme_color_override("font_color", Color.WHITE)
-	_cooldown_label.add_theme_constant_override("outline_size", 3)
-	_cooldown_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	_cooldown_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_cooldown_label)
+
+
+func _build_keybind_label(slot_width: float, slot_height: float) -> void:
+	_keybind_label = Label.new()
+	_keybind_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_keybind_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+	_keybind_label.position = Vector2(26.0, -5.0)
+	_keybind_label.size = Vector2(slot_width, slot_height - 8.0)
+	_keybind_label.add_theme_font_size_override("font_size", 30)
+	_keybind_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_keybind_label)
 
 
 func _build_icon(slot_width: float, slot_height: float) -> void:
@@ -148,6 +156,10 @@ func set_pressed(value: bool) -> void:
 	_cooldown_label.scale = content_scale
 	_cooldown_label.position.y = y_offset
 
+	_keybind_label.pivot_offset = _keybind_label.size / 2.0
+	_keybind_label.scale = content_scale
+	_keybind_label.position.y = y_offset
+
 
 func set_desaturated(value: bool) -> void:
 	if _desaturated == value:
@@ -158,3 +170,7 @@ func set_desaturated(value: bool) -> void:
 
 func set_cooldown_text(text: String) -> void:
 	_cooldown_label.text = text
+
+
+func set_keybind_text(text: String) -> void:
+	_keybind_label.text = text

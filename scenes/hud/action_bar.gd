@@ -26,6 +26,7 @@ func setup(player: Player) -> void:
 		slot.setup(SLOT_VARIANTS[i], SLOT_WIDTH, SLOT_HEIGHT)
 		slot.position = Vector2(i * (SLOT_WIDTH + SLOT_GAP), 0)
 		add_child(slot)
+		slot.set_keybind_text(InputManager.get_ability_label(_player.player_index, i))
 		_slots.append(slot)
 
 	var total_width := SLOT_WIDTH * Player.MAX_ABILITY_SLOTS + SLOT_GAP * (Player.MAX_ABILITY_SLOTS - 1)

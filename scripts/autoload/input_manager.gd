@@ -25,6 +25,20 @@ const JOY_BUTTON_BINDINGS := {
 	"open_upgrades": JOY_BUTTON_DPAD_UP,
 }
 
+const KB_DISPLAY_NAMES := {
+	"ability_1": "1",
+	"ability_2": "2",
+	"ability_3": "3",
+	"ability_4": "4",
+}
+
+const JOY_DISPLAY_NAMES := {
+	"ability_1": "X",
+	"ability_2": "Y",
+	"ability_3": "RB",
+	"ability_4": "LB",
+}
+
 const STICK_AXES := {
 	"move_up": [JOY_AXIS_LEFT_Y, -1.0],
 	"move_down": [JOY_AXIS_LEFT_Y, 1.0],
@@ -77,3 +91,10 @@ func get_movement_vector(player_index: int) -> Vector2:
 
 func is_action_just_pressed(player_index: int, action: String) -> bool:
 	return Input.is_action_just_pressed("p%d_%s" % [player_index + 1, action])
+
+
+func get_ability_label(player_index: int, slot_index: int) -> String:
+	var action := "ability_%d" % (slot_index + 1)
+	if player_index == 0:
+		return KB_DISPLAY_NAMES.get(action, "")
+	return JOY_DISPLAY_NAMES.get(action, "")
