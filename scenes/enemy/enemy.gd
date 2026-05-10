@@ -29,7 +29,7 @@ func play_sound(action: String) -> void:
 			# self-frees when the stream finishes.
 			_play_one_shot(
 				preload("res://assets/sound/sound effects/sfx_dan_enemy_dying01.wav"),
-				-10,
+				-20,
 			)
 			return
 		_:

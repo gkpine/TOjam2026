@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://b44u3ac380ue3"]
 
 [ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="1"]
-[ext_resource type="Script" uid="uid://dhy07mnajpmhk" path="res://scenes/enemy/behaviors/shepherd_behavior.gd" id="1_8n0jl"]
-[ext_resource type="Resource" uid="uid://b7222ey4bq842" path="res://scenes/enemy/types/sheep.tres" id="1_hauai"]
+[ext_resource type="Script" path="res://scenes/enemy/behaviors/shepherd_behavior.gd" id="1_8n0jl"]
+[ext_resource type="Resource" path="res://scenes/enemy/types/sheep.tres" id="1_hauai"]
 
 [sub_resource type="Resource" id="Resource_hauai"]
 script = ExtResource("1_8n0jl")
