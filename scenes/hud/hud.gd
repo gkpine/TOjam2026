@@ -62,6 +62,10 @@ func setup(player: Player) -> void:
 	add_child(target_ui)
 	target_ui.setup(player)
 
+	var casting_display := OtherPlayerCastingDisplayController.new()
+	add_child(casting_display)
+	casting_display.setup(_world_index)
+
 	_level_up_prompt = Label.new()
 	_level_up_prompt.add_theme_font_size_override("font_size", 24)
 	_level_up_prompt.add_theme_color_override("font_color", Color(1.0, 0.9, 0.2))

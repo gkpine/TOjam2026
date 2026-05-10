@@ -4,6 +4,8 @@ signal player_position_changed(player_index: int, new_position: Vector2)
 signal cross_world_event(source_player: int, target_player: int, event_data: Dictionary)
 signal player_died(player_index: int)
 signal winner_declared(winner_index: int)
+signal targeting_cast_started(caster_index: int, target_index: int, ability: AbilityData)
+signal targeting_cast_ended(caster_index: int, target_index: int)
 
 const PLAYER_COLORS: Array[Color] = [Color.RED, Color.DODGER_BLUE, Color.GREEN, Color.YELLOW]
 
