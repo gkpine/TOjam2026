@@ -50,29 +50,34 @@ func is_spawnable_at(world_pos: Vector2, clearance_radius: float = 24.0) -> bool
 	return true
 
 
-func spawn_enemy_at(data: EnemyData, world_position: Vector2) -> Enemy:
+func spawn_enemy_at(data: EnemyData, world_position: Vector2, difficulty: float = 0.0) -> Enemy:
 	# One-shot helper used by the debug panel, the SummonEnemy ability, and
 	# the shepherd behavior (which tracks the returned minion in its pool).
 	# Bypasses SpawnRegion bookkeeping — these enemies don't count against any
-	# region's alive cap and don't drop loot on death.
+	# region's alive cap and don't drop loot on death. `difficulty` is the
+	# pre-computed scalar that Enemy.setup will use for stat scaling; the
+	# default of 0 means "spawn at base stats" (preferred for debug spawns).
 	var enemy: Enemy = ENEMY_SCENE.instantiate()
-	enemy.setup(data)
+	enemy.setup(data, difficulty)
 	enemy.global_position = world_position
 	add_child(enemy)
 	return enemy
 
 
 func get_all_enemy_types() -> Array[EnemyData]:
-	# Union of every SpawnRegion's enemy_types in this world. Used by callers
-	# (SummonEnemy ability, debug spawn panel) that need the full roster of
-	# enemies that can appear in a given player's world.
+	# Union of every SpawnRegion's spawn_distribution in this world. Used by
+	# callers (SummonEnemy ability, debug spawn panel) that need the full
+	# roster of enemies that can appear in a given player's world. Weights
+	# are ignored here — this returns the de-duplicated *set* of EnemyData.
 	var seen := {}
 	var result: Array[EnemyData] = []
 	for region in find_children("*", "SpawnRegion", true, false):
-		for ed in (region as SpawnRegion).enemy_types:
-			if ed != null and not seen.has(ed):
-				seen[ed] = true
-				result.append(ed)
+		for entry in (region as SpawnRegion).spawn_distribution:
+			if entry == null or entry.enemy_type == null:
+				continue
+			if not seen.has(entry.enemy_type):
+				seen[entry.enemy_type] = true
+				result.append(entry.enemy_type)
 	return result
 
 func setup(world_index: int, player_scene: PackedScene, player_color: Color) -> void:

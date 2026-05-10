@@ -13,6 +13,9 @@ var players: Array[Node] = []
 var player_data: Array[Dictionary] = []
 var cpu_players: Array[bool] = []
 var game_start_time_msec: int = 0
+## Linear growth rate of [method get_global_difficulty] in difficulty units
+## per second of survival. Default 0.05 ⇒ +1 every 20s, +3 at 60s.
+@export var global_difficulty_rate: float = 0.05
 
 
 func reset() -> void:
@@ -63,6 +66,13 @@ func on_player_died(player_index: int) -> void:
 
 func get_survival_seconds() -> float:
 	return float(Time.get_ticks_msec() - game_start_time_msec) / 1000.0
+
+
+## Global difficulty scalar — starts at 0 on game start, grows linearly with
+## survival time. Spawners multiply by their `relative_difficulty` to get
+## the per-enemy difficulty value passed into [method Enemy.setup].
+func get_global_difficulty() -> float:
+	return get_survival_seconds() * global_difficulty_rate
 
 
 func _check_winner() -> void:

@@ -33,3 +33,13 @@ extends Resource
 @export var in_combat_health_regen_multiplier: float = 0.0
 @export var moving_hp_regen_multiplier: float = 0.25
 @export var loot_table: Dictionary = {}
+
+@export_group("Difficulty Scaling")
+## Added to [member strength] per unit of difficulty. The enemy's runtime
+## strength becomes `strength + difficulty_scale_strength * difficulty`,
+## where `difficulty = global_difficulty * spawner.relative_difficulty`.
+@export var difficulty_scale_strength: float = 0.0
+## Added to [member max_health] per unit of difficulty. Same formula as
+## [member difficulty_scale_strength]; current health is reset to the new
+## max when scaling is applied during setup.
+@export var difficulty_scale_max_health: float = 0.0

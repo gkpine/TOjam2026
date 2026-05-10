@@ -27,4 +27,6 @@ func apply_effect(caster: Character, target_player: Player = null) -> void:
 	var angle := randf() * TAU
 	var dist := enemy_data.target_range_px * 0.8
 	var spawn_pos := target_player.global_position + Vector2(cos(angle), sin(angle)) * dist
-	target_world.spawn_enemy_at(enemy_data, spawn_pos)
+	# Match what a relative_difficulty=1.0 spawner would stamp on its enemies,
+	# so summoned mobs scale with survival time the same way ambient ones do.
+	target_world.spawn_enemy_at(enemy_data, spawn_pos, GameState.get_global_difficulty())
