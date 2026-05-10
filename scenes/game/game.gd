@@ -14,6 +14,13 @@ func _ready() -> void:
 	for i in range(count):
 		var container := SubViewportContainer.new()
 		container.stretch = true
+		# Container + viewport must keep processing input during pause so the
+		# winner overlay's mouse clicks reach their buttons. Pause is set on the
+		# whole tree when a winner is declared, and a default-INHERIT container
+		# would stop forwarding InputEventMouseButton at that point (mouse_entered
+		# still fires via the engine's hover tracking, which is why hover used
+		# to work but clicks didn't).
+		container.process_mode = Node.PROCESS_MODE_ALWAYS
 		_set_container_rect(container, i, count, screen_size)
 		add_child(container)
 
@@ -21,10 +28,15 @@ func _ready() -> void:
 		viewport.handle_input_locally = false
 		viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 		viewport.audio_listener_enable_2d = true
+		viewport.process_mode = Node.PROCESS_MODE_ALWAYS
 		container.add_child(viewport)
 
 		var world := WorldScene.instantiate()
 		viewport.add_child(world)
+		# World stays PAUSABLE so gameplay (enemies, spawners, player physics)
+		# actually freezes when the tree is paused. The winner overlay sets its
+		# own process_mode to ALWAYS inside its setup(), so it stays interactive.
+		world.process_mode = Node.PROCESS_MODE_PAUSABLE
 		world.setup(i, PlayerScene, GameState.PLAYER_COLORS[i])
 		GameState.register_world(i, world)
 

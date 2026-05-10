@@ -82,6 +82,26 @@ func setup(player_index: int, survival_seconds: float) -> void:
 		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		banner.add_child(label)
 
+		# Transparent Button overlay catches mouse clicks and hover. Sits on top
+		# of the banner art with no visuals (flat + transparent modulate) so the
+		# paper banner texture still shows through. Click confirms immediately;
+		# hover updates the selection so the bracket follows the mouse.
+		#
+		# PROCESS_MODE_ALWAYS is needed because the game tree is paused while
+		# the winner overlay is shown — without it, the GUI system filters out
+		# the click dispatch even though hover events still arrive through the
+		# engine's continuous mouse-position tracking.
+		var click := Button.new()
+		click.process_mode = Node.PROCESS_MODE_ALWAYS
+		click.size = banner_size
+		click.flat = true
+		click.modulate = Color(1, 1, 1, 0)
+		click.focus_mode = Control.FOCUS_NONE
+		click.mouse_filter = Control.MOUSE_FILTER_STOP
+		click.pressed.connect(_on_option_clicked.bind(i))
+		click.mouse_entered.connect(_on_option_hovered.bind(i))
+		banner.add_child(click)
+
 		_banners.append(banner)
 
 	_position_options(vp_size)
@@ -107,7 +127,12 @@ func _process(_delta: float) -> void:
 		_selected_index = mini(_selected_index + 1, _banners.size() - 1)
 		_update_selection()
 
-	if InputManager.is_action_just_pressed(_input_index, "switch_target"):
+	# `switch_target` covers Space (kb) and A button (controller) per the
+	# project's InputManager. `ui_accept` is Godot's built-in confirm action,
+	# bound to Enter (and Space) by default — adds Enter without touching
+	# in-game bindings where switch_target also means "cycle target."
+	if InputManager.is_action_just_pressed(_input_index, "switch_target") \
+			or Input.is_action_just_pressed("ui_accept"):
 		_confirm_selection()
 
 
@@ -119,6 +144,19 @@ func _update_selection() -> void:
 	_bracket = CursorBracketScene.instantiate()
 	banner.add_child(_bracket)
 	_bracket.wrap_rect(Rect2(Vector2.ZERO, banner.get_banner_size()), -32.0, -32.0)
+
+
+func _on_option_clicked(idx: int) -> void:
+	_selected_index = idx
+	_update_selection()
+	_confirm_selection()
+
+
+func _on_option_hovered(idx: int) -> void:
+	if _selected_index == idx:
+		return
+	_selected_index = idx
+	_update_selection()
 
 
 func _confirm_selection() -> void:
