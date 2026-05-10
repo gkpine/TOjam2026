@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource("1")
+base_damage = 30.0
 ability_id = &"smite"
 ability_name = "Smite"
 cooldown = 0.0
