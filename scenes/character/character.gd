@@ -36,6 +36,7 @@ var _cast_timer: float = 0.0
 var _cast_duration: float = 0.0
 var _casting_ability: AbilityData = null
 var _casting_target: Node = null
+var _cast_has_target: bool = false
 var _cast_bar: StatusBar = null
 var _cast_bar_offset_y: float = 20.0
 var _cast_indicator: Node2D = null
@@ -161,6 +162,7 @@ func start_cast(ability: AbilityData) -> void:
 	_cast_timer = 0.0
 	_cast_duration = ability.cast_time
 	_casting_ability = ability
+	_cast_has_target = _casting_target != null
 
 	_cast_bar = StatusBar.new()
 	add_child(_cast_bar)
@@ -175,24 +177,32 @@ func start_cast(ability: AbilityData) -> void:
 		add_child(indicator)
 		_cast_indicator = indicator
 
+	_emit_targeting_signal(true)
+
 
 func _process_casting(delta: float) -> void:
 	if not is_casting:
+		return
+	if _cast_has_target and not is_instance_valid(_casting_target):
+		cancel_cast()
 		return
 	_cast_timer += delta
 	if _cast_bar:
 		_cast_bar.update_value(_cast_timer, _cast_duration)
 	if _cast_timer >= _cast_duration:
-		var target_valid := _casting_target == null or is_instance_valid(_casting_target)
-		if target_valid:
-			_casting_ability.apply_effect(self, _casting_target as Player)
+		var safe_target: Player = null
+		if is_instance_valid(_casting_target):
+			safe_target = _casting_target as Player
+		_casting_ability.apply_effect(self, safe_target)
 		_finish_cast()
 
 
 func _finish_cast() -> void:
+	_emit_targeting_signal(false)
 	is_casting = false
 	_casting_ability = null
 	_casting_target = null
+	_cast_has_target = false
 	if _cast_bar:
 		_cast_bar.queue_free()
 		_cast_bar = null
@@ -203,9 +213,11 @@ func _finish_cast() -> void:
 
 
 func cancel_cast() -> void:
+	_emit_targeting_signal(false)
 	is_casting = false
 	_casting_ability = null
 	_casting_target = null
+	_cast_has_target = false
 	if _cast_bar:
 		_cast_bar.queue_free()
 		_cast_bar = null
@@ -216,6 +228,17 @@ func cancel_cast() -> void:
 
 func _on_cast_finished() -> void:
 	pass
+
+
+func _emit_targeting_signal(started: bool) -> void:
+	if not is_instance_valid(_casting_target) or not (_casting_target is Player) or not (self is Player):
+		return
+	var target_p := _casting_target as Player
+	var caster_p := self as Player
+	if started:
+		GameState.targeting_cast_started.emit(caster_p.player_index, target_p.player_index, _casting_ability)
+	else:
+		GameState.targeting_cast_ended.emit(caster_p.player_index, target_p.player_index)
 
 
 func _get_floating_number_position() -> Vector2:
