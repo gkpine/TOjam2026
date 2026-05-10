@@ -26,7 +26,7 @@ theme_override_constants/separation = 20
 [node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=2044783475]
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
-text = "TOjam 2026"
+text = "Split Brawl"
 horizontal_alignment = 1
 
 [node name="SelectLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=133441908]
@@ -40,24 +40,24 @@ layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Btn2" type="Button" parent="CenterContainer/VBoxContainer/PlayerCountContainer"]
+[node name="Btn2" type="Button" parent="CenterContainer/VBoxContainer/PlayerCountContainer" unique_id=1503925491]
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
 text = "2 Players"
 
-[node name="Btn4" type="Button" parent="CenterContainer/VBoxContainer/PlayerCountContainer"]
+[node name="Btn4" type="Button" parent="CenterContainer/VBoxContainer/PlayerCountContainer" unique_id=258524165]
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
 text = "4 Players"
 
-[node name="PlayerConfigContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+[node name="PlayerConfigContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer" unique_id=362079703]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=969433259]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Start Game"

@@ -7,6 +7,7 @@ var _cpu_toggles: Array[Button] = []
 @onready var _btn_2: Button = %Btn2
 @onready var _btn_4: Button = %Btn4
 @onready var _player_config: VBoxContainer = %PlayerConfigContainer
+@onready var _title_label: Label = $CenterContainer/VBoxContainer/TitleLabel
 
 
 func _ready() -> void:
@@ -15,6 +16,20 @@ func _ready() -> void:
 	_start_button.pressed.connect(_on_start)
 	_start_button.disabled = true
 	_player_config.visible = false
+	_start_title_bulge()
+
+
+func _start_title_bulge() -> void:
+	# Wait one frame so the VBoxContainer has resolved the label's size; otherwise
+	# pivot_offset would be (0, 0) and the bulge would pivot from the top-left
+	# corner instead of the label's center.
+	await get_tree().process_frame
+	_title_label.pivot_offset = _title_label.size / 2.0
+	var tween := create_tween().set_loops()
+	tween.tween_property(_title_label, "scale", Vector2(1.12, 1.12), 0.7) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(_title_label, "scale", Vector2(1.0, 1.0), 0.7) \
+		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
 func _on_count_selected(count: int) -> void:
