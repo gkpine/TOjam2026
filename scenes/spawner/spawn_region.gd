@@ -1,22 +1,39 @@
 extends Node2D
 class_name SpawnRegion
-## Marks a polygonal region where a fixed pool of enemy types spawns.
+## Marks a polygonal region where a weighted distribution of enemy types spawns.
 ##
 ## Drop this into a world scene, draw the [Polygon2D] child to outline the
-## region, and assign the [EnemyData] types that should appear inside it. The
-## region keeps up to [member max_alive] enemies alive at any time and tops
-## itself back up [member respawn_time] seconds after kills.
+## region, and assign [SpawnEntry] rows describing which enemies can appear
+## and with what relative weight. The region keeps up to [member max_alive]
+## enemies alive at any time and tops itself back up [member respawn_time]
+## seconds after kills.
 ##
 ## Spawn positions are sampled uniformly inside the polygon (area-weighted
 ## triangle fan), so concave shapes work too.
+##
+## Each spawned enemy is given a difficulty value of
+## `GameState.get_global_difficulty() * relative_difficulty`, which the
+## enemy applies to its own stats during setup.
 
 const ENEMY_SCENE := preload("res://scenes/enemy/enemy.tscn")
 
-@export var enemy_types: Array[EnemyData] = []
+## The roster of enemy types this region can spawn, with relative weights.
+## Weights are auto-normalized — {2, 1, 1} behaves the same as
+## {0.5, 0.25, 0.25}. Entries with `weight <= 0` or null `enemy_type` are
+## ignored.
+@export var spawn_distribution: Array[SpawnEntry] = []
 @export_range(0, 32) var max_alive: int = 3
 @export var respawn_time: float = 2.0
-## Pre-populate the region up to [member max_alive] on _ready instead of
-## letting the timer fill it gradually.
+## Number of enemies to spawn immediately on _ready. -1 means "use
+## [member max_alive]" (full map at game start). Set to 0 to let the
+## respawn timer fill the region gradually.
+@export var num_initial_spawn: int = -1
+## Multiplier applied to [member GameState.get_global_difficulty] when
+## stamping a difficulty onto each spawned enemy. 1.0 = average; >1
+## scales harder, 0 disables scaling for this region.
+@export var relative_difficulty: float = 1.0
+## Pre-populate the region on _ready instead of letting the timer fill it
+## gradually. When false, [member num_initial_spawn] is ignored.
 @export var spawn_on_ready: bool = true
 ## Hide the editor-visible [Polygon2D] once the game starts running.
 @export var hide_polygon_at_runtime: bool = true
@@ -38,6 +55,9 @@ var _alive: Array = []
 var _timer: Timer
 var _triangles: PackedInt32Array = PackedInt32Array()
 var _triangle_cum_areas: Array[float] = []
+# Cumulative weights paired with spawn_distribution entries (same indices).
+# Built once in _ready; resampled every spawn via _pick_enemy_data.
+var _cum_weights: PackedFloat32Array = PackedFloat32Array()
 
 
 func _ready() -> void:
@@ -48,13 +68,15 @@ func _ready() -> void:
 	if hide_polygon_at_runtime:
 		_polygon.visible = false
 	_build_triangulation()
+	_build_weight_table()
 	_timer = Timer.new()
 	_timer.wait_time = respawn_time
 	_timer.timeout.connect(_on_timer_timeout)
 	add_child(_timer)
 	_timer.start()
 	if spawn_on_ready:
-		for i in max_alive:
+		var initial_count: int = num_initial_spawn if num_initial_spawn >= 0 else max_alive
+		for i in initial_count:
 			_spawn_enemy.call_deferred()
 
 
@@ -76,6 +98,23 @@ func _build_triangulation() -> void:
 		i += 3
 
 
+func _build_weight_table() -> void:
+	# Cumulative-weight table for the weighted picker. We accept sloppy data
+	# (null entries, missing enemy_type, zero weights) and just skip those
+	# rows — the resulting cumulative array still indexes back into
+	# spawn_distribution correctly via _pick_enemy_data's loop bounds.
+	_cum_weights = PackedFloat32Array()
+	var running := 0.0
+	for entry in spawn_distribution:
+		var w := 0.0
+		if entry != null and entry.enemy_type != null and entry.weight > 0.0:
+			w = entry.weight
+		running += w
+		_cum_weights.append(running)
+	if running <= 0.0:
+		push_warning("SpawnRegion '%s': spawn_distribution has no positive-weight entries; nothing will spawn." % name)
+
+
 func _on_timer_timeout() -> void:
 	_alive = _alive.filter(func(e): return is_instance_valid(e))
 	if _alive.size() < max_alive:
@@ -83,17 +122,18 @@ func _on_timer_timeout() -> void:
 
 
 func _spawn_enemy() -> void:
-	if enemy_types.is_empty() or _triangles.is_empty():
+	if _triangles.is_empty():
+		return
+	var data := _pick_enemy_data()
+	if data == null:
 		return
 	var world := get_parent()
 	var pt := _find_spawn_point(world)
 	if pt == Vector2.INF:
 		return
-	var data: EnemyData = enemy_types.pick_random() as EnemyData
-	if data == null:
-		return
+	var diff: float = GameState.get_global_difficulty() * relative_difficulty
 	var enemy := ENEMY_SCENE.instantiate()
-	enemy.setup(data)
+	enemy.setup(data, diff)
 	enemy.global_position = pt
 	world.add_child(enemy)
 	_alive.append(enemy)
@@ -104,6 +144,24 @@ func _spawn_enemy() -> void:
 			world.player.gain_experience(exp_reward)
 			_roll_loot(loot, world.player)
 	)
+
+
+func _pick_enemy_data() -> EnemyData:
+	# Weighted random over spawn_distribution. _cum_weights[i] is the running
+	# total after entry i, so a uniform [0, total) sample falls into the
+	# first index whose cumulative weight is >= it. Rows that were skipped
+	# in _build_weight_table contribute 0, so they're naturally unselectable.
+	if _cum_weights.is_empty():
+		return null
+	var total: float = _cum_weights[_cum_weights.size() - 1]
+	if total <= 0.0:
+		return null
+	var r := randf() * total
+	var idx := 0
+	while idx < _cum_weights.size() - 1 and _cum_weights[idx] < r:
+		idx += 1
+	var entry := spawn_distribution[idx]
+	return entry.enemy_type if entry != null else null
 
 
 func _find_spawn_point(world: Node) -> Vector2:

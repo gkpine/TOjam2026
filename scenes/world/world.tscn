@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dyoc5aut25ddh" path="res://Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color1.png" id="2_sl2e5"]
 [ext_resource type="PackedScene" path="res://scenes/spawner/spawn_region.tscn" id="3_spawn_region"]
 [ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="4_71ii3"]
+[ext_resource type="Script" path="res://scenes/spawner/spawn_entry.gd" id="33_spawn_entry"]
 [ext_resource type="Resource" uid="uid://djmr7dedscd5a" path="res://scenes/enemy/types/skull.tres" id="5_skull"]
 [ext_resource type="Resource" uid="uid://dn22s3kfkujot" path="res://scenes/enemy/types/gnome.tres" id="6_gnome"]
 [ext_resource type="Resource" uid="uid://38cbgi7vsueu" path="res://scenes/enemy/types/thief.tres" id="7_thief"]
@@ -199,6 +200,71 @@ physics_layer_0/collision_mask = 0
 navigation_layer_0/layers = 1
 sources/1 = SubResource("TileSetAtlasSource_1fp7r")
 
+[sub_resource type="Resource" id="SpawnEntry_skull_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("5_skull")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_gnome_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("6_gnome")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_thief_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("7_thief")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_lizard_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("8_lizard")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_spider_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("9_spider")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_snake_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("10_snake")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_gnoll_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("11_gnoll")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_bear_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("12_bear")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_panda_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("13_panda")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_turtle_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("14_turtle")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_minotaur_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("15_minotaur")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_troll_main"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("16_troll")
+weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_skull_r2"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("5_skull")
+weight = 1.0
+
 [node name="World" type="Node2D" unique_id=1063674193]
 script = ExtResource("1_script")
 
@@ -206,7 +272,7 @@ script = ExtResource("1_script")
 
 [node name="SpawnRegion" parent="." unique_id=2070305625 instance=ExtResource("3_spawn_region")]
 position = Vector2(400, 0)
-enemy_types = Array[ExtResource("4_71ii3")]([ExtResource("5_skull"), ExtResource("6_gnome"), ExtResource("7_thief"), ExtResource("8_lizard"), ExtResource("9_spider"), ExtResource("10_snake"), ExtResource("11_gnoll"), ExtResource("12_bear"), ExtResource("13_panda"), ExtResource("14_turtle"), ExtResource("15_minotaur"), ExtResource("16_troll")])
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_skull_main"), SubResource("SpawnEntry_gnome_main"), SubResource("SpawnEntry_thief_main"), SubResource("SpawnEntry_lizard_main"), SubResource("SpawnEntry_spider_main"), SubResource("SpawnEntry_snake_main"), SubResource("SpawnEntry_gnoll_main"), SubResource("SpawnEntry_bear_main"), SubResource("SpawnEntry_panda_main"), SubResource("SpawnEntry_turtle_main"), SubResource("SpawnEntry_minotaur_main"), SubResource("SpawnEntry_troll_main")])
 max_alive = 6
 
 [node name="Map" type="Node2D" parent="." unique_id=1803197977]
@@ -951,7 +1017,7 @@ position = Vector2(2642, -1325)
 
 [node name="SpawnRegion2" parent="." unique_id=248462520 instance=ExtResource("3_spawn_region")]
 position = Vector2(2244, -2087)
-enemy_types = Array[ExtResource("4_71ii3")]([ExtResource("5_skull")])
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_skull_r2")])
 max_alive = 5
 
 [node name="Polygon2D" parent="SpawnRegion2" index="0"]

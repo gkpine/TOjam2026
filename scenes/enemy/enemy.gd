@@ -9,6 +9,9 @@ const DEFAULT_BEHAVIOR := preload("res://scenes/enemy/behaviors/chaser.tres")
 var sprite: AnimatedSprite2D
 var behavior: EnemyBehavior
 var behavior_state: Dictionary = {}  # per-enemy scratch space for the behavior
+## Difficulty assigned by the spawner at setup time. Drives the linear
+## stat scaling in [method _apply_stats]. 0 ⇒ base stats only.
+var difficulty: float = 0.0
 var _health_bar: StatusBar
 var _hit_scale_tween: Tween
 var _hit_flash_tween: Tween
@@ -59,8 +62,9 @@ func _ready() -> void:
 		nav_agent.radius = enemy_data.collision_radius
 
 
-func setup(data: EnemyData) -> void:
+func setup(data: EnemyData, p_difficulty: float = 0.0) -> void:
 	enemy_data = data
+	difficulty = p_difficulty
 	_apply_stats()
 	behavior = enemy_data.behavior if enemy_data.behavior else DEFAULT_BEHAVIOR
 	sprite = $AnimatedSprite2D
@@ -224,10 +228,15 @@ func _update_animation() -> void:
 
 
 func _apply_stats() -> void:
-	health = enemy_data.health
-	max_health = enemy_data.max_health if enemy_data.max_health > 0.0 else enemy_data.health
+	# Base + difficulty-scaled stats. The shared .tres holds the base values
+	# and per-unit scale factors; difficulty is per-instance, so we never
+	# mutate the EnemyData. Only max_health and strength scale today —
+	# extend here if more stats need to ramp.
+	var base_max := enemy_data.max_health if enemy_data.max_health > 0.0 else enemy_data.health
+	max_health = base_max + (enemy_data.difficulty_scale_max_health * difficulty)
+	health = max_health
 	base_damage = enemy_data.base_damage
-	strength = enemy_data.strength
+	strength = enemy_data.strength + (enemy_data.difficulty_scale_strength * difficulty)
 	auto_attack_enabled = enemy_data.auto_attack_enabled
 	auto_attack_per_second = enemy_data.auto_attack_per_second
 	auto_attack_delay = enemy_data.auto_attack_delay
