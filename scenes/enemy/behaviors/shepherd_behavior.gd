@@ -84,11 +84,14 @@ func tick(enemy: Enemy, delta: float) -> void:
 				s["grab_target"] = nearest
 				s["phase"] = PHASE_APPROACH_MINION
 		PHASE_APPROACH_MINION:
-			var grab: Enemy = s["grab_target"] as Enemy
-			if grab == null or not is_instance_valid(grab):
+			# Don't `as Enemy` before is_instance_valid — casting a freed object
+			# itself throws "Trying to cast a freed object."
+			var grab_obj: Object = s["grab_target"]
+			if grab_obj == null or not is_instance_valid(grab_obj):
 				s["phase"] = PHASE_CHASE
 				s["grab_target"] = null
 				return
+			var grab := grab_obj as Enemy
 			if enemy.global_position.distance_to(grab.global_position) <= grab_distance:
 				var origin := grab.global_position
 				minions.erase(grab)
@@ -107,9 +110,10 @@ func compute_velocity(enemy: Enemy, _delta: float) -> Vector2:
 	var phase: int = (s.get("phase", PHASE_CHASE) as int)
 
 	if phase == PHASE_APPROACH_MINION:
-		var grab: Enemy = s.get("grab_target", null) as Enemy
-		if grab == null or not is_instance_valid(grab):
+		var grab_obj: Object = s.get("grab_target", null)
+		if grab_obj == null or not is_instance_valid(grab_obj):
 			return Vector2.ZERO
+		var grab := grab_obj as Enemy
 		var dist := enemy.global_position.distance_to(grab.global_position)
 		if dist <= grab_distance:
 			return Vector2.ZERO
