@@ -93,20 +93,23 @@ func _physics_process(_delta: float) -> void:
 
 	if is_attacking:
 		return
+
+	var face_dir_x := 0.0
+	if target != null and is_instance_valid(target):
+		face_dir_x = target.global_position.x - global_position.x
+	elif velocity.x != 0.0:
+		face_dir_x = velocity.x
+	if face_dir_x < 0.0:
+		sprite.flip_h = true
+	elif face_dir_x > 0.0:
+		sprite.flip_h = false
+
 	if is_guarding:
 		if sprite.animation != &"guard":
 			sprite.play("guard")
-		if velocity.x < 0:
-			sprite.flip_h = true
-		elif velocity.x > 0:
-			sprite.flip_h = false
 	elif velocity != Vector2.ZERO:
 		if sprite.animation != &"run":
 			sprite.play("run")
-		if velocity.x < 0:
-			sprite.flip_h = true
-		elif velocity.x > 0:
-			sprite.flip_h = false
 	else:
 		if sprite.animation != &"idle":
 			sprite.play("idle")
@@ -305,8 +308,8 @@ func gain_experience(amount: float) -> void:
 	while level < LEVEL_DATA.max_level and experience >= LEVEL_DATA.get_xp_required(level):
 		experience -= LEVEL_DATA.get_xp_required(level)
 		level += 1
-		leveled_up.emit(level)
 		pending_upgrade_count += 1
+		leveled_up.emit(level)
 	var xp_req := LEVEL_DATA.get_xp_required(level)
 	if xp_req > 0.0:
 		experience_changed.emit(experience, xp_req)

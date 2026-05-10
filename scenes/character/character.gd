@@ -183,7 +183,9 @@ func _process_casting(delta: float) -> void:
 	if _cast_bar:
 		_cast_bar.update_value(_cast_timer, _cast_duration)
 	if _cast_timer >= _cast_duration:
-		_casting_ability.apply_effect(self, _casting_target as Player)
+		var target_valid := _casting_target == null or is_instance_valid(_casting_target)
+		if target_valid:
+			_casting_ability.apply_effect(self, _casting_target as Player)
 		_finish_cast()
 
 

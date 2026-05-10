@@ -40,31 +40,24 @@ layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="Btn1" type="Button" parent="CenterContainer/VBoxContainer/PlayerCountContainer" unique_id=776969421]
-unique_name_in_owner = true
-layout_mode = 2
-toggle_mode = true
-text = "1 Player"
-
-[node name="Btn2" type="Button" parent="CenterContainer/VBoxContainer/PlayerCountContainer" unique_id=1383953127]
+[node name="Btn2" type="Button" parent="CenterContainer/VBoxContainer/PlayerCountContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
 text = "2 Players"
 
-[node name="Btn3" type="Button" parent="CenterContainer/VBoxContainer/PlayerCountContainer" unique_id=1593333153]
-unique_name_in_owner = true
-layout_mode = 2
-toggle_mode = true
-text = "3 Players"
-
-[node name="Btn4" type="Button" parent="CenterContainer/VBoxContainer/PlayerCountContainer" unique_id=1696472494]
+[node name="Btn4" type="Button" parent="CenterContainer/VBoxContainer/PlayerCountContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
 text = "4 Players"
 
-[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1350829176]
+[node name="PlayerConfigContainer" type="VBoxContainer" parent="CenterContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StartButton" type="Button" parent="CenterContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Start Game"

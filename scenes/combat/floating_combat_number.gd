@@ -5,6 +5,7 @@ var damage_type: String = "auto_attack"
 var is_player_damage: bool = false
 var is_heal: bool = false
 var is_xp: bool = false
+var custom_text: String = ""
 var anim_config: Dictionary = {}
 
 
@@ -19,26 +20,29 @@ func _ready() -> void:
 	add_theme_constant_override("shadow_offset_x", 2)
 	add_theme_constant_override("shadow_offset_y", 2)
 
-	var color_tag := ""
-	var color_end := ""
-	var prefix := ""
-	var suffix := ""
-	if is_heal:
-		color_tag = "[color=green]"
-		color_end = "[/color]"
-		prefix = "+"
-	elif is_xp:
-		color_tag = "[color=#b366ff]"
-		color_end = "[/color]"
-		prefix = "+"
-		suffix = "xp"
-	elif is_player_damage:
-		color_tag = "[color=red]"
-		color_end = "[/color]"
-	elif damage_type == "ability":
-		color_tag = "[color=yellow]"
-		color_end = "[/color]"
-	text = "[center]" + color_tag + prefix + str(amount) + suffix + color_end + "[/center]"
+	if custom_text != "":
+		text = "[center]" + custom_text + "[/center]"
+	else:
+		var color_tag := ""
+		var color_end := ""
+		var prefix := ""
+		var suffix := ""
+		if is_heal:
+			color_tag = "[color=green]"
+			color_end = "[/color]"
+			prefix = "+"
+		elif is_xp:
+			color_tag = "[color=#b366ff]"
+			color_end = "[/color]"
+			prefix = "+"
+			suffix = "xp"
+		elif is_player_damage:
+			color_tag = "[color=red]"
+			color_end = "[/color]"
+		elif damage_type == "ability":
+			color_tag = "[color=yellow]"
+			color_end = "[/color]"
+		text = "[center]" + color_tag + prefix + str(amount) + suffix + color_end + "[/center]"
 
 	await get_tree().process_frame
 	_start_animation()

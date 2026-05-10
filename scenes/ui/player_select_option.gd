@@ -2,11 +2,15 @@ class_name PlayerSelectOption
 extends Control
 
 const CursorBracketScene := preload("res://scenes/ui/cursor_bracket.tscn")
+const BAR_BASE := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png")
+const BAR_FILL := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png")
 const FRAME_SIZE := 192
 const SPRITE_DISPLAY_SIZE := 148.0
 const OPTION_SIZE := Vector2(96, 96)
 
 var _sprite: AnimatedSprite2D
+var _health_bar: StatusBar
+var _target_player: Player
 var _bracket: Node2D = null
 var _is_selected: bool = false
 var _player_index: int = -1
@@ -35,9 +39,25 @@ func setup(target_index: int) -> void:
 	_sprite.sprite_frames = frames
 	_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_sprite.scale = Vector2.ONE * (SPRITE_DISPLAY_SIZE / float(FRAME_SIZE))
-	_sprite.position = OPTION_SIZE / 2.0
+	_sprite.position = Vector2(OPTION_SIZE.x / 2.0, OPTION_SIZE.y / 2.0 - 12.0)
 	_sprite.play("idle")
 	add_child(_sprite)
+
+	_health_bar = StatusBar.new()
+	_health_bar.setup(BAR_BASE, BAR_FILL, 1)
+	_health_bar.set_fill_color(Color(1.0, 0.2, 0.2))
+	add_child(_health_bar)
+	_health_bar.position = Vector2(
+		(OPTION_SIZE.x - _health_bar.get_bar_width()) / 2.0,
+		OPTION_SIZE.y - StatusBar.BAR_HEIGHT + 12.0
+	)
+
+	if target_index < GameState.players.size():
+		var player := GameState.players[target_index] as Player
+		if player and is_instance_valid(player):
+			_target_player = player
+			_health_bar.update_value(player.health, player.get_effective_stat("max_health"))
+			player.health_changed.connect(_on_health_changed)
 
 
 func set_selected(selected: bool) -> void:
@@ -56,3 +76,8 @@ func set_selected(selected: bool) -> void:
 
 func get_target_index() -> int:
 	return _player_index
+
+
+func _on_health_changed(_amount: int, _world_pos: Vector2, _change_type: String) -> void:
+	if _target_player and is_instance_valid(_target_player) and _health_bar:
+		_health_bar.update_value(_target_player.health, _target_player.get_effective_stat("max_health"))
