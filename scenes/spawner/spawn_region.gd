@@ -21,12 +21,17 @@ const ENEMY_SCENE := preload("res://scenes/enemy/enemy.tscn")
 ## Hide the editor-visible [Polygon2D] once the game starts running.
 @export var hide_polygon_at_runtime: bool = true
 ## Reject sampled points that fail [code]World.is_spawnable_at()[/code] — by
-## default this filters out points off the ground tilemap or on water. Turn off
-## if you want the polygon to be the sole authority.
+## default this filters out points off the ground tilemap, on water, or
+## overlapping a tree's collider. Turn off if you want the polygon to be the
+## sole authority.
 @export var validate_position: bool = true
 ## How many random points to try inside the polygon before giving up on a spawn.
 ## A polygon mostly covering valid ground rarely needs more than 4–8.
 @export_range(1, 64) var max_sample_attempts: int = 16
+## Pixel radius around the candidate point that must be free of static bodies
+## (trees, etc.) for the point to be valid. Set to 0 to disable the obstacle
+## check while keeping tile validation.
+@export_range(0.0, 256.0, 1.0) var obstacle_clearance: float = 24.0
 
 var _polygon: Polygon2D
 var _alive: Array = []
@@ -109,7 +114,7 @@ func _find_spawn_point(world: Node) -> Vector2:
 	var has_validator := validate_position and world != null and world.has_method("is_spawnable_at")
 	for i in max_sample_attempts:
 		var pt := _random_point_in_region()
-		if not has_validator or world.is_spawnable_at(pt):
+		if not has_validator or world.is_spawnable_at(pt, obstacle_clearance):
 			return pt
 	return Vector2.INF
 

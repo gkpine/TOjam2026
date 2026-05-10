@@ -13,16 +13,19 @@ var player: Player = null
 
 @onready var _ground_tilemap: TileMapLayer = get_node_or_null("Map/GroundTileMapLayer") as TileMapLayer
 @onready var _water_tilemap: TileMapLayer = get_node_or_null("Map/WaterTileMapLayer") as TileMapLayer
+var _clearance_query: PhysicsShapeQueryParameters2D
+var _clearance_shape: CircleShape2D
 
 
 func get_world_id() -> int:
 	return world_id
 
 
-func is_spawnable_at(world_pos: Vector2) -> bool:
-	# A point is spawnable if it sits on a Ground tile and not on a Water tile.
-	# Returns true when either layer is missing — falls back to "trust the
-	# region" rather than blocking everything.
+func is_spawnable_at(world_pos: Vector2, clearance_radius: float = 24.0) -> bool:
+	# A point is spawnable if it sits on a Ground tile, is not on a Water tile,
+	# and has no static body (e.g. a tree's StaticBody2D) within
+	# `clearance_radius` pixels. Each check is fail-open: a missing tile layer
+	# or absent World2D is treated as "no opinion" rather than blocking.
 	if _ground_tilemap != null:
 		var ground_cell := _ground_tilemap.local_to_map(_ground_tilemap.to_local(world_pos))
 		if _ground_tilemap.get_cell_source_id(ground_cell) == -1:
@@ -31,6 +34,19 @@ func is_spawnable_at(world_pos: Vector2) -> bool:
 		var water_cell := _water_tilemap.local_to_map(_water_tilemap.to_local(world_pos))
 		if _water_tilemap.get_cell_source_id(water_cell) != -1:
 			return false
+	if clearance_radius > 0.0:
+		var w2d := get_world_2d()
+		if w2d != null and w2d.direct_space_state != null:
+			if _clearance_query == null:
+				_clearance_shape = CircleShape2D.new()
+				_clearance_query = PhysicsShapeQueryParameters2D.new()
+				_clearance_query.shape = _clearance_shape
+				_clearance_query.collide_with_areas = false
+				_clearance_query.collide_with_bodies = true
+			_clearance_shape.radius = clearance_radius
+			_clearance_query.transform = Transform2D(0.0, world_pos)
+			if not w2d.direct_space_state.intersect_shape(_clearance_query, 1).is_empty():
+				return false
 	return true
 
 
