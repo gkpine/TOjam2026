@@ -7,6 +7,15 @@ extends Resource
 # be stateless — per-enemy state lives on enemy.behavior_state (Dictionary).
 
 
+# Non-movement actions: spawning minions, firing projectiles, FSM bookkeeping.
+# Called once per physics frame before compute_velocity (and skipped while the
+# enemy is casting). Default is a no-op so movement-only behaviors don't need
+# to override it.
+func tick(_enemy: Enemy, _delta: float) -> void:
+	pass
+	
+
+
 func compute_velocity(_enemy: Enemy, _delta: float) -> Vector2:
 	return Vector2.ZERO
 

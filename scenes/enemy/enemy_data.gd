@@ -9,6 +9,14 @@ extends Resource
 @export var attack_frames: int = 7
 @export var run_frames: int = 6
 
+# Optional sprite overrides. When set, these are used instead of auto-loading
+# from res://assets/enemies/{enemy_name}/{enemy_name}_{idle|attack|run}.png.
+# Lets enemies whose art lives elsewhere (e.g. the sheep in
+# Tiny Swords/Terrain/Resources/Meat) skip the copy-and-rename dance.
+@export var idle_texture_override: Texture2D
+@export var attack_texture_override: Texture2D
+@export var run_texture_override: Texture2D
+
 @export var health: float = 30.0
 @export var max_health: float = 0.0
 @export var base_damage: float = 5.0
