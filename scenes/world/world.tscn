@@ -4,8 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://b5mekofi8bd0k" path="res://scenes/world/objects/tree.tscn" id="2_bt7bg"]
 [ext_resource type="Texture2D" uid="uid://dyoc5aut25ddh" path="res://Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color1.png" id="2_sl2e5"]
 [ext_resource type="PackedScene" path="res://scenes/spawner/spawn_region.tscn" id="3_spawn_region"]
-[ext_resource type="Script" uid="uid://b6kss627m4mwh" path="res://scenes/enemy/enemy_data.gd" id="4_71ii3"]
-[ext_resource type="Script" path="res://scenes/spawner/spawn_entry.gd" id="33_spawn_entry"]
 [ext_resource type="Resource" uid="uid://djmr7dedscd5a" path="res://scenes/enemy/types/skull.tres" id="5_skull"]
 [ext_resource type="Resource" uid="uid://dn22s3kfkujot" path="res://scenes/enemy/types/gnome.tres" id="6_gnome"]
 [ext_resource type="Resource" uid="uid://38cbgi7vsueu" path="res://scenes/enemy/types/thief.tres" id="7_thief"]
@@ -32,6 +30,7 @@
 [ext_resource type="PackedScene" uid="uid://d2arnvk4i1hw" path="res://scenes/world/objects/tree4.tscn" id="30_tree4"]
 [ext_resource type="PackedScene" uid="uid://d1adils5wbk0q" path="res://scenes/world/objects/Rock1.tscn" id="31_rock1"]
 [ext_resource type="PackedScene" uid="uid://c3ws4jad4b74o" path="res://scenes/world/objects/Rock2.tscn" id="32_rock2"]
+[ext_resource type="Script" path="res://scenes/spawner/spawn_entry.gd" id="33_spawn_entry"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tytul"]
 texture = ExtResource("17_wbwoo")
@@ -200,80 +199,58 @@ physics_layer_0/collision_mask = 0
 navigation_layer_0/layers = 1
 sources/1 = SubResource("TileSetAtlasSource_1fp7r")
 
-[sub_resource type="Resource" id="SpawnEntry_skull_main"]
-script = ExtResource("33_spawn_entry")
-enemy_type = ExtResource("5_skull")
-weight = 1.0
-
-[sub_resource type="Resource" id="SpawnEntry_gnome_main"]
-script = ExtResource("33_spawn_entry")
-enemy_type = ExtResource("6_gnome")
-weight = 1.0
-
-[sub_resource type="Resource" id="SpawnEntry_thief_main"]
-script = ExtResource("33_spawn_entry")
-enemy_type = ExtResource("7_thief")
-weight = 1.0
-
-[sub_resource type="Resource" id="SpawnEntry_lizard_main"]
-script = ExtResource("33_spawn_entry")
-enemy_type = ExtResource("8_lizard")
-weight = 1.0
-
-[sub_resource type="Resource" id="SpawnEntry_spider_main"]
-script = ExtResource("33_spawn_entry")
-enemy_type = ExtResource("9_spider")
-weight = 1.0
-
-[sub_resource type="Resource" id="SpawnEntry_snake_main"]
-script = ExtResource("33_spawn_entry")
-enemy_type = ExtResource("10_snake")
-weight = 1.0
-
-[sub_resource type="Resource" id="SpawnEntry_gnoll_main"]
-script = ExtResource("33_spawn_entry")
-enemy_type = ExtResource("11_gnoll")
-weight = 1.0
-
-[sub_resource type="Resource" id="SpawnEntry_bear_main"]
+[sub_resource type="Resource" id="SpawnEntry_bear"]
 script = ExtResource("33_spawn_entry")
 enemy_type = ExtResource("12_bear")
-weight = 1.0
 
-[sub_resource type="Resource" id="SpawnEntry_panda_main"]
-script = ExtResource("33_spawn_entry")
-enemy_type = ExtResource("13_panda")
-weight = 1.0
-
-[sub_resource type="Resource" id="SpawnEntry_turtle_main"]
+[sub_resource type="Resource" id="SpawnEntry_turtle"]
 script = ExtResource("33_spawn_entry")
 enemy_type = ExtResource("14_turtle")
-weight = 1.0
 
-[sub_resource type="Resource" id="SpawnEntry_minotaur_main"]
-script = ExtResource("33_spawn_entry")
-enemy_type = ExtResource("15_minotaur")
-weight = 1.0
-
-[sub_resource type="Resource" id="SpawnEntry_troll_main"]
-script = ExtResource("33_spawn_entry")
-enemy_type = ExtResource("16_troll")
-weight = 1.0
-
-[sub_resource type="Resource" id="SpawnEntry_skull_r2"]
+[sub_resource type="Resource" id="SpawnEntry_skull"]
 script = ExtResource("33_spawn_entry")
 enemy_type = ExtResource("5_skull")
-weight = 1.0
+
+[sub_resource type="Resource" id="SpawnEntry_troll"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("16_troll")
+
+[sub_resource type="Resource" id="SpawnEntry_minotaur"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("15_minotaur")
+
+[sub_resource type="Resource" id="SpawnEntry_lizard"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("8_lizard")
+
+[sub_resource type="Resource" id="SpawnEntry_panda"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("13_panda")
+
+[sub_resource type="Resource" id="SpawnEntry_spider"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("9_spider")
+
+[sub_resource type="Resource" id="SpawnEntry_gnoll"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("11_gnoll")
+
+[sub_resource type="Resource" id="SpawnEntry_snake"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("10_snake")
+
+[sub_resource type="Resource" id="SpawnEntry_gnome"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("6_gnome")
+
+[sub_resource type="Resource" id="SpawnEntry_thief"]
+script = ExtResource("33_spawn_entry")
+enemy_type = ExtResource("7_thief")
 
 [node name="World" type="Node2D" unique_id=1063674193]
 script = ExtResource("1_script")
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=75646214]
-
-[node name="SpawnRegion" parent="." unique_id=2070305625 instance=ExtResource("3_spawn_region")]
-position = Vector2(400, 0)
-spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_skull_main"), SubResource("SpawnEntry_gnome_main"), SubResource("SpawnEntry_thief_main"), SubResource("SpawnEntry_lizard_main"), SubResource("SpawnEntry_spider_main"), SubResource("SpawnEntry_snake_main"), SubResource("SpawnEntry_gnoll_main"), SubResource("SpawnEntry_bear_main"), SubResource("SpawnEntry_panda_main"), SubResource("SpawnEntry_turtle_main"), SubResource("SpawnEntry_minotaur_main"), SubResource("SpawnEntry_troll_main")])
-max_alive = 6
 
 [node name="Map" type="Node2D" parent="." unique_id=1803197977]
 
@@ -1015,13 +992,109 @@ position = Vector2(2540, -648)
 [node name="WaterRock13" parent="Map" unique_id=499791803 instance=ExtResource("21_xq18t")]
 position = Vector2(2642, -1325)
 
+[node name="SpawnRegion" parent="Map" unique_id=1992557656 instance=ExtResource("3_spawn_region")]
+position = Vector2(930, 296)
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_bear"), SubResource("SpawnEntry_turtle")])
+
+[node name="Polygon2D" parent="Map/SpawnRegion" index="0"]
+polygon = PackedVector2Array(-259, -428, 412, -524, 446, -27, -200, 200)
+
 [node name="SpawnRegion2" parent="." unique_id=248462520 instance=ExtResource("3_spawn_region")]
 position = Vector2(2244, -2087)
-spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_skull_r2")])
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_skull")])
 max_alive = 5
 
 [node name="Polygon2D" parent="SpawnRegion2" index="0"]
 position = Vector2(-368, -94)
 polygon = PackedVector2Array(-229, -118, -197, 9, 1060, 11, 1066, 130, 1449, 138, 1458, 378, 1333, 394, 1335, 704, 896, 719, 887, 596, 1006, 588, 1014, 461, 893, 448, 881, 263, 427.19617, 256.73874, 431, 661, 50, 654, 52, 319, -462, 315, -527, 116, -903, -8, -926, -116)
 
+[node name="SpawnRegion" parent="SpawnRegion2" unique_id=1038100954 instance=ExtResource("3_spawn_region")]
+position = Vector2(462, 1069)
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_troll"), SubResource("SpawnEntry_minotaur")])
+
+[node name="Polygon2D" parent="SpawnRegion2/SpawnRegion" index="0"]
+position = Vector2(-19, -6)
+polygon = PackedVector2Array(-200, -200, 200, -200, 930, -196, 941, 465, -162, 475)
+
+[node name="SpawnRegion2" parent="SpawnRegion2" unique_id=1644797689 instance=ExtResource("3_spawn_region")]
+position = Vector2(-561, 3231)
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_lizard")])
+max_alive = 5
+
+[node name="Polygon2D" parent="SpawnRegion2/SpawnRegion2" index="0"]
+polygon = PackedVector2Array(-200, -200, 200, -200, 966, 449, 950, 878, -200, 200)
+
+[node name="SpawnRegion3" parent="SpawnRegion2" unique_id=1378857641 instance=ExtResource("3_spawn_region")]
+position = Vector2(-2054, 998)
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_panda")])
+max_alive = 2
+
+[node name="Polygon2D" parent="SpawnRegion2/SpawnRegion3" index="0"]
+polygon = PackedVector2Array(-200, -200, 200, -200, 171, -485, 1137, -416, 1009, 519, -200, 200)
+
+[node name="SpawnRegion4" parent="SpawnRegion2" unique_id=728711681 instance=ExtResource("3_spawn_region")]
+position = Vector2(-2983, 1996)
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_spider"), SubResource("SpawnEntry_bear"), SubResource("SpawnEntry_gnoll")])
+max_alive = 2
+
+[node name="Polygon2D" parent="SpawnRegion2/SpawnRegion4" index="0"]
+polygon = PackedVector2Array(-200, -200, 200, -200, 1359, -273, 1519, 1220, -116, 1270, -200, 200)
+
+[node name="SpawnRegion5" parent="SpawnRegion2" unique_id=1676565266 instance=ExtResource("3_spawn_region")]
+position = Vector2(-5436, 54)
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_snake"), SubResource("SpawnEntry_gnome")])
+max_alive = 10
+obstacle_clearance = 11.0
+
+[node name="Polygon2D" parent="SpawnRegion2/SpawnRegion5" index="0"]
+position = Vector2(831.5, 304)
+scale = Vector2(5.1575, 2.52)
+polygon = PackedVector2Array(-200, -200, 11.924377, -185.71423, 194.57101, -56.746033, 200, 200, 2.811432, 210.7143, -75.1333, 51.58734)
+
+[node name="SpawnRegion6" parent="SpawnRegion2" unique_id=347876837 instance=ExtResource("3_spawn_region")]
+position = Vector2(-1384, 4831)
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_gnome"), SubResource("SpawnEntry_gnoll"), SubResource("SpawnEntry_thief")])
+max_alive = 10
+
+[node name="Polygon2D" parent="SpawnRegion2/SpawnRegion6" index="0"]
+position = Vector2(1061.5, 88)
+scale = Vector2(6.3075, 1.44)
+
+[node name="SpawnRegion7" parent="SpawnRegion2" unique_id=1881673690 instance=ExtResource("3_spawn_region")]
+position = Vector2(478, 1764)
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_skull"), SubResource("SpawnEntry_spider")])
+max_alive = 5
+
+[node name="Polygon2D" parent="SpawnRegion2/SpawnRegion7" index="0"]
+position = Vector2(396, 547)
+scale = Vector2(2.98, 3.735)
+
+[node name="SpawnRegion8" parent="SpawnRegion2" unique_id=173649779 instance=ExtResource("3_spawn_region")]
+position = Vector2(-2591, -42)
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_minotaur")])
+
+[node name="Polygon2D" parent="SpawnRegion2/SpawnRegion8" index="0"]
+position = Vector2(452.5, 67.5)
+scale = Vector2(3.2625, 1.3375)
+
+[node name="bigzone" parent="SpawnRegion2" unique_id=159295480 instance=ExtResource("3_spawn_region")]
+position = Vector2(-5323, -381)
+spawn_distribution = Array[ExtResource("33_spawn_entry")]([SubResource("SpawnEntry_snake"), SubResource("SpawnEntry_lizard"), SubResource("SpawnEntry_spider")])
+max_alive = 5
+
+[node name="Polygon2D" parent="SpawnRegion2/bigzone" index="0"]
+position = Vector2(3316, 2182)
+scale = Vector2(17.66, 9.96)
+polygon = PackedVector2Array(-200, -200, -76.44394, -158.03212, -32.559456, -195.58232, 200, -200, 222.93317, 337.65057, 30.011322, 329.81927, 34.994335, 167.87148, -99.60362, 79.11646, -137.25934, -44.176704)
+
+[editable path="Map/SpawnRegion"]
 [editable path="SpawnRegion2"]
+[editable path="SpawnRegion2/SpawnRegion"]
+[editable path="SpawnRegion2/SpawnRegion2"]
+[editable path="SpawnRegion2/SpawnRegion3"]
+[editable path="SpawnRegion2/SpawnRegion4"]
+[editable path="SpawnRegion2/SpawnRegion5"]
+[editable path="SpawnRegion2/SpawnRegion6"]
+[editable path="SpawnRegion2/SpawnRegion7"]
+[editable path="SpawnRegion2/SpawnRegion8"]
+[editable path="SpawnRegion2/bigzone"]
