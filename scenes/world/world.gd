@@ -7,6 +7,7 @@ const COLOR_A := Color(0.15, 0.15, 0.2)
 const COLOR_B := Color(0.2, 0.2, 0.25)
 const ENEMY_SCENE := preload("res://scenes/enemy/enemy.tscn")
 const DEBUG_SPAWN_PANEL_SCENE := preload("res://scenes/debug/debug_spawn_panel.tscn")
+const DEBUG_SPAWN_COUNTER_SCENE := preload("res://scenes/debug/debug_spawn_counter.tscn")
 
 var world_id: int = 0
 var player: Player = null
@@ -105,6 +106,7 @@ func setup(world_index: int, player_scene: PackedScene, player_color: Color) -> 
 	hud.setup(player)
 	if world_index == 0:
 		add_child(DEBUG_SPAWN_PANEL_SCENE.instantiate())
+		add_child(DEBUG_SPAWN_COUNTER_SCENE.instantiate())
 	if world_index < GameState.cpu_players.size() and GameState.cpu_players[world_index]:
 		InputManager.set_cpu_controlled(world_index, true)
 		var cpu := CpuController.new()

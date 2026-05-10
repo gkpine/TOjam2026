@@ -121,13 +121,22 @@ func _on_timer_timeout() -> void:
 		_spawn_enemy()
 
 
+func alive_count() -> int:
+	# Filtering on read so the count reflects reality between timer ticks.
+	# Used by the on-screen DebugSpawnCounter; safe to call every frame.
+	_alive = _alive.filter(func(e): return is_instance_valid(e))
+	return _alive.size()
+
+
 func _spawn_enemy() -> void:
 	if _triangles.is_empty():
 		return
 	var data := _pick_enemy_data()
 	if data == null:
 		return
-	var world := get_parent()
+	var world := _find_world()
+	if world == null:
+		return
 	var pt := _find_spawn_point(world)
 	if pt == Vector2.INF:
 		return
@@ -144,6 +153,21 @@ func _spawn_enemy() -> void:
 			world.player.gain_experience(exp_reward)
 			_roll_loot(loot, world.player)
 	)
+
+
+func _find_world() -> Node:
+	# Walk up to the nearest ancestor that implements the World contract
+	# (`describe_spawn_failure`). SpawnRegions can be nested under another
+	# SpawnRegion or under a grouping node like `Map` — `get_parent()` alone
+	# would point at the wrong node, causing spawned enemies to live outside
+	# `World.get_children()` where Player and Enemy expect to find each other.
+	var n := get_parent()
+	while n != null:
+		if n.has_method("describe_spawn_failure"):
+			return n
+		n = n.get_parent()
+	push_warning("SpawnRegion '%s': no ancestor World found; cannot spawn." % name)
+	return null
 
 
 func _pick_enemy_data() -> EnemyData:

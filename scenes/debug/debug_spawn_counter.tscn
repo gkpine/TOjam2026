@@ -1,0 +1,7 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scenes/debug/debug_spawn_counter.gd" id="1_counter"]
+
+[node name="DebugSpawnCounter" type="CanvasLayer"]
+layer = 11
+script = ExtResource("1_counter")
