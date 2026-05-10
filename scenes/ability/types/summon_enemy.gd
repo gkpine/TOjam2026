@@ -6,7 +6,7 @@ func needs_player_target() -> bool:
 	return true
 
 
-func apply_effect(caster: Player, target_player: Player = null) -> void:
+func apply_effect(caster: Character, target_player: Player = null) -> void:
 	if target_player == null or not is_instance_valid(target_player):
 		var targets: Array[Node] = []
 		for p in GameState.players:
