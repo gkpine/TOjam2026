@@ -17,10 +17,10 @@ var _hit_flash_tween: Tween
 func play_sound(action: String) -> void:
 	match action:
 		"swing":
-			$AudioStreamPlayer2D.volume_db = -20
+			$AudioStreamPlayer2D.volume_db = -10
 			$AudioStreamPlayer2D.stream = preload("res://assets/sound/sound effects/sfx_dan_enemy_swing03.wav")
 		"impact":
-			$AudioStreamPlayer2D.volume_db = -10
+			$AudioStreamPlayer2D.volume_db = -5
 			$AudioStreamPlayer2D.stream = preload("res://assets/sound/sound effects/sfx_dan_enemy_impact01.wav")
 		"death":
 			# Death sound must outlive the enemy — the body's queue_free() at the

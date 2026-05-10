@@ -45,13 +45,13 @@ var _guard_duration: float = 0.0
 func play_sound(action: String, duration: float = 0.0) -> void:
 	match action:
 		"swing":
-			$AudioStreamPlayer2D.volume_db = -20
+			$AudioStreamPlayer2D.volume_db = -10
 			$AudioStreamPlayer2D.stream = preload("res://assets/sound/sound effects/sfx_dan_player_swing02.wav")
 		"casting":
 			$AudioStreamPlayer2D.volume_db = 0
 			$AudioStreamPlayer2D.stream = CASTING_SOUND
 		"impact":
-			$AudioStreamPlayer2D.volume_db = -10
+			$AudioStreamPlayer2D.volume_db = -5
 			$AudioStreamPlayer2D.stream = preload("res://assets/sound/sound effects/sfx_dan_player_impact01.wav")
 		"death":
 			# Death sound must outlive the player — die() ends with queue_free(),
