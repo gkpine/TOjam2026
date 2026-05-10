@@ -1,8 +1,8 @@
 class_name OtherPlayerCastingRowItem
 extends HBoxContainer
 
-const BAR_BASE := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/BigBar_Base.png")
-const BAR_FILL := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/BigBar_Fill.png")
+const BAR_BASE := preload("res://assets/ui/big_bar_base.png")
+const BAR_FILL := preload("res://assets/ui/big_bar_fill.png")
 const ICON_SIZE := 64.0
 
 var caster_index: int = -1

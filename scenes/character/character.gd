@@ -41,8 +41,8 @@ var _cast_bar: StatusBar = null
 var _cast_bar_offset_y: float = 20.0
 var _cast_indicator: Node2D = null
 
-const CAST_BAR_BASE := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Base.png")
-const CAST_BAR_FILL := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Bars/SmallBar_Fill.png")
+const CAST_BAR_BASE := preload("res://assets/ui/small_bar_base.png")
+const CAST_BAR_FILL := preload("res://assets/ui/small_bar_fill.png")
 
 
 func get_effective_stat(stat_name: String) -> float:

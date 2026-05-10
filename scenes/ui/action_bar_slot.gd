@@ -3,10 +3,10 @@ extends Control
 
 enum Variant { BLUE, RED }
 
-const BLUE_REGULAR := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Buttons/BigBlueButton_Regular.png")
-const BLUE_PRESSED := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Buttons/BigBlueButton_Pressed.png")
-const RED_REGULAR := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Buttons/BigRedButton_Regular.png")
-const RED_PRESSED := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Buttons/BigRedButton_Pressed.png")
+const BLUE_REGULAR := preload("res://assets/ui/big_blue_button_regular.png")
+const BLUE_PRESSED := preload("res://assets/ui/big_blue_button_pressed.png")
+const RED_REGULAR := preload("res://assets/ui/big_red_button_regular.png")
+const RED_PRESSED := preload("res://assets/ui/big_red_button_pressed.png")
 
 const PIECE_SIZE := 64.0
 

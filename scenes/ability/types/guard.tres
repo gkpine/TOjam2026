@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="GuardData" format=3]
 
 [ext_resource type="Script" path="res://scenes/ability/types/guard.gd" id="1"]
-[ext_resource type="Texture2D" path="res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_06.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/ui/icon_06.png" id="2"]
 
 [resource]
 script = ExtResource("1")

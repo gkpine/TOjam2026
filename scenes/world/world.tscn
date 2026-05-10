@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bpspx764as28n" path="res://scenes/world/world.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://b5mekofi8bd0k" path="res://scenes/world/objects/tree.tscn" id="2_bt7bg"]
-[ext_resource type="Texture2D" uid="uid://dyoc5aut25ddh" path="res://Tiny Swords (Free Pack)/Terrain/Tileset/Tilemap_color1.png" id="2_sl2e5"]
+[ext_resource type="Texture2D" uid="uid://dyoc5aut25ddh" path="res://assets/terrain/tilemap_color_1.png" id="2_sl2e5"]
 [ext_resource type="PackedScene" path="res://scenes/spawner/spawn_region.tscn" id="3_spawn_region"]
 [ext_resource type="Resource" uid="uid://djmr7dedscd5a" path="res://scenes/enemy/types/skull.tres" id="5_skull"]
 [ext_resource type="Resource" uid="uid://dn22s3kfkujot" path="res://scenes/enemy/types/gnome.tres" id="6_gnome"]
@@ -16,7 +16,7 @@
 [ext_resource type="Resource" uid="uid://bvdisiuokxigr" path="res://scenes/enemy/types/turtle.tres" id="14_turtle"]
 [ext_resource type="Resource" uid="uid://b12n7xm3ch1ao" path="res://scenes/enemy/types/minotaur.tres" id="15_minotaur"]
 [ext_resource type="Resource" uid="uid://b5icbws0p7hvc" path="res://scenes/enemy/types/troll.tres" id="16_troll"]
-[ext_resource type="Texture2D" uid="uid://cg6sksy20e0f8" path="res://Tiny Swords (Free Pack)/Terrain/Tileset/Water Foam.png" id="17_wbwoo"]
+[ext_resource type="Texture2D" uid="uid://cg6sksy20e0f8" path="res://assets/terrain/water_foam.png" id="17_wbwoo"]
 [ext_resource type="PackedScene" uid="uid://usx0ijq5rex2" path="res://scenes/world/objects/water_rock_1.tscn" id="18_tytul"]
 [ext_resource type="PackedScene" uid="uid://63sg7w2txwv7" path="res://scenes/world/objects/water_rock_2.tscn" id="19_t634p"]
 [ext_resource type="PackedScene" uid="uid://cpii7wwsvy1a" path="res://scenes/world/objects/water_rock_3.tscn" id="20_ues17"]

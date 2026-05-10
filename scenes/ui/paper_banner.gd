@@ -1,7 +1,7 @@
 class_name PaperBanner
 extends Control
 
-const BANNER_TEX := preload("res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Banners/Banner.png")
+const BANNER_TEX := preload("res://assets/ui/banner.png")
 
 const TL_REGION := Rect2(28, 60, 100, 68)
 const TC_REGION := Rect2(192, 60, 64, 68)

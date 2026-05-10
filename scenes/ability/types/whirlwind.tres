@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="WhirlwindData" format=3 uid="uid://bdlsxhxvvm03s"]
 
 [ext_resource type="Script" uid="uid://dgb1dyu1xuxgn" path="res://scenes/ability/types/whirlwind.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://bypxnry7apcrw" path="res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_05.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bypxnry7apcrw" path="res://assets/ui/icon_05.png" id="2"]
 
 [resource]
 script = ExtResource("1")

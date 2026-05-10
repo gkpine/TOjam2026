@@ -11,8 +11,6 @@ extends Resource
 
 # Optional sprite overrides. When set, these are used instead of auto-loading
 # from res://assets/enemies/{enemy_name}/{enemy_name}_{idle|attack|run}.png.
-# Lets enemies whose art lives elsewhere (e.g. the sheep in
-# Tiny Swords/Terrain/Resources/Meat) skip the copy-and-rename dance.
 @export var idle_texture_override: Texture2D
 @export var attack_texture_override: Texture2D
 @export var run_texture_override: Texture2D

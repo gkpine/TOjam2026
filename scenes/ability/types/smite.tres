@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="SmiteData" format=3 uid="uid://csuvfcqmmqa2b"]
 
 [ext_resource type="Script" uid="uid://c8upa7k7ssoxk" path="res://scenes/ability/types/smite.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://bvue67tfl8gev" path="res://Tiny Swords (Free Pack)/UI Elements/UI Elements/Icons/Icon_01.png" id="2"]
+[ext_resource type="Texture2D" uid="uid://bvue67tfl8gev" path="res://assets/ui/icon_01.png" id="2"]
 
 [resource]
 script = ExtResource("1")

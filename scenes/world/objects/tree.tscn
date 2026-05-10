@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b5mekofi8bd0k"]
 
-[ext_resource type="Texture2D" uid="uid://dq3rhfdem5hy3" path="res://Tiny Swords (Free Pack)/Terrain/Resources/Wood/Trees/Tree2.png" id="1_rvqxf"]
+[ext_resource type="Texture2D" uid="uid://dq3rhfdem5hy3" path="res://assets/terrain/tree_2.png" id="1_rvqxf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1cpa3"]
 atlas = ExtResource("1_rvqxf")
