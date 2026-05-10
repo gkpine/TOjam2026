@@ -1,14 +1,6 @@
-[gd_resource type="Resource" script_class="ChargerBehavior" format=3]
+[gd_resource type="Resource" script_class="ChargerBehavior" format=3 uid="uid://ckocdykh4aabl"]
 
-[ext_resource type="Script" path="res://scenes/enemy/behaviors/charger_behavior.gd" id="1"]
+[ext_resource type="Script" uid="uid://b6glfh2vub68n" path="res://scenes/enemy/behaviors/charger_behavior.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
-trigger_range = 220.0
-windup_time = 0.5
-charge_speed = 420.0
-charge_distance = 280.0
-charge_max_time = 0.8
-recover_time = 1.0
-approach_speed_multiplier = 0.6
-stop_distance = 50.0

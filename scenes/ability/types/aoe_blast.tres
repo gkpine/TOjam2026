@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="AoeBlastData" format=3]
+[gd_resource type="Resource" script_class="AoeBlastData" format=3 uid="uid://cd0h6e3jg5bga"]
 
-[ext_resource type="Script" path="res://scenes/ability/types/aoe_blast.gd" id="1"]
+[ext_resource type="Script" uid="uid://cpgv5swbhamiq" path="res://scenes/ability/types/aoe_blast.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
@@ -8,5 +8,3 @@ ability_id = &"aoe_blast"
 ability_name = "AoE Blast"
 cooldown = 4.0
 cast_time = 1.5
-radius = 150.0
-damage = 25.0
