@@ -16,6 +16,7 @@ extends AbilityData
 func apply_effect(caster: Character, _target_player: Player = null) -> void:
 	if caster == null or not is_instance_valid(caster):
 		return
+	caster.play_attack_animation()
 	var world := caster.get_parent()
 	if world == null:
 		return

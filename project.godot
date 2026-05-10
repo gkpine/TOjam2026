@@ -32,8 +32,9 @@ theme/custom="res://assets/theme/default_theme.tres"
 
 [layer_names]
 
-2d_physics/layer_1="Players"
+2d_physics/layer_1="World"
 2d_physics/layer_2="Enemies"
+2d_physics/layer_3="Players"
 
 [physics]
 

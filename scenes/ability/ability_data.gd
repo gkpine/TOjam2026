@@ -23,6 +23,7 @@ func needs_player_target() -> bool:
 # Character (Player or Enemy) and an optional Player target (used by player-
 # vs-player abilities like Smite). Subclasses that only make sense for one
 # side should type-check at the top.
+
 func apply_effect(caster: Character, target_player: Player = null) -> void:
 	pass
 
